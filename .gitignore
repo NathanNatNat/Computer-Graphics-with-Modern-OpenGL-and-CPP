@@ -1,7 +1,4 @@
 .vs
-*.vcxproj
-*.filters
-*.user
 **/Debug
 **/Release
 **/x64
