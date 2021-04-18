@@ -8,12 +8,15 @@
 
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
-#include <glm/mat4x4.hpp>
+
+#include <glm\glm.hpp>
+#include <glm\gtc\matrix_transform.hpp>
+#include <glm\gtc\type_ptr.hpp>
 
 // Window dimensions
 const GLint WIDTH = 800, HEIGHT = 600;
 
-GLuint VBO, VAO, shader, uniformXMove;
+GLuint VBO, VAO, shader, uniformModel;
 
 bool direction = true;
 float triOffset = 0.0f;
@@ -21,27 +24,27 @@ float triMaxOffset = 0.7f;
 float triIncrement = 0.0005f;
 
 // Vertex Shader code
-static const char* vShader = "                                                \n\
-#version 330                                                                  \n\
-                                                                              \n\
-layout (location = 0) in vec3 pos;											  \n\
-                                                                              \n\
-uniform float xMove;                                                          \n\
-                                                                              \n\
-void main()                                                                   \n\
-{                                                                             \n\
-    gl_Position = vec4(0.4 * pos.x + xMove, 0.4 * pos.y, pos.z, 1.0);				  \n\
+static const char* vShader = "                                              \n\
+#version 330                                                                \n\
+                                                                            \n\
+layout (location = 0) in vec3 pos;											\n\
+                                                                            \n\
+uniform mat4 model;                                                         \n\
+                                                                            \n\
+void main()                                                                 \n\
+{                                                                           \n\
+    gl_Position = model * vec4(0.4 * pos.x, 0.4 * pos.y, pos.z, 1.0);		\n\
 }";
 
 // Fragment Shader
-static const char* fShader = "                                                \n\
-#version 330                                                                  \n\
-                                                                              \n\
-out vec4 colour;                                                               \n\
-                                                                              \n\
-void main()                                                                   \n\
-{                                                                             \n\
-    colour = vec4(1.0, 0.0, 0.0, 1.0);                                         \n\
+static const char* fShader = "                                              \n\
+#version 330                                                                \n\
+                                                                            \n\
+out vec4 colour;                                                            \n\
+                                                                            \n\
+void main()                                                                 \n\
+{                                                                           \n\
+    colour = vec4(1.0, 0.0, 0.0, 1.0);                                      \n\
 }";
 
 void CreateTriangle()
@@ -81,13 +84,13 @@ void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
 	glCompileShader(theShader);
 
 	GLint result = 0;
+	GLchar eLog[1024] = { 0 };
 
 	glGetShaderiv(theShader, GL_COMPILE_STATUS, &result);
 	if (!result)
 	{
-		GLchar eLog[1024] = { 0 };
 		glGetShaderInfoLog(theShader, 1024, NULL, eLog);
-		fprintf(stderr, "Error compiling the %d shader: '%s'\n", (char)shaderType, eLog);
+		fprintf(stderr, "Error compiling the %d shader: '%s'\n", shaderType, eLog);
 		return;
 	}
 
@@ -128,7 +131,7 @@ void CompileShaders()
 		return;
 	}
 
-	uniformXMove = glGetUniformLocation(shader, "xMove");
+	uniformModel = glGetUniformLocation(shader, "model");
 }
 
 int main()
@@ -208,7 +211,10 @@ int main()
 
 		glUseProgram(shader);
 
-		glUniform1f(uniformXMove, triOffset);
+		glm::mat4 model(1.0f);
+		model = glm::translate(model, glm::vec3(triOffset, triOffset, 0.0f));
+
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
