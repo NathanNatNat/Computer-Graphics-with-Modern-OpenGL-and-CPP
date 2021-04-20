@@ -14,30 +14,32 @@
 #include <glm\gtc\type_ptr.hpp>
 
 // Window dimensions
-const GLint WIDTH = 800, HEIGHT = 600;
+const int WIDTH{ 800 }, HEIGHT{ 600 };
+const float ToRadians = { 3.14159265f / 180.0f };
 
-GLuint VBO, VAO, shader, uniformModel;
+uint32_t VBO{ }, VAO{ }, shader{ }, uniformModel{ };
 
-bool direction = true;
-float triOffset = 0.0f;
-float triMaxOffset = 0.7f;
-float triIncrement = 0.0005f;
+bool direction{ true };
+float triOffset{ 0.0f };
+float triMaxOffset{ 0.7f };
+float triIncrement{ 0.0005f };
+float CurrentAngle{ 0.0f };
 
 // Vertex Shader code
-static const char* vShader = "                                              \n\
+static const char* vShader{ "												\n\
 #version 330                                                                \n\
                                                                             \n\
 layout (location = 0) in vec3 pos;											\n\
                                                                             \n\
-uniform mat4 model;                                                         \n\
+uniform mat4 model;															\n\
                                                                             \n\
 void main()                                                                 \n\
 {                                                                           \n\
-    gl_Position = model * vec4(0.4 * pos.x, 0.4 * pos.y, pos.z, 1.0);		\n\
-}";
+    gl_Position = model * vec4(pos.x * 0.4, pos.y * 0.4, pos.z, 1.0);		\n\
+}" };
 
 // Fragment Shader
-static const char* fShader = "                                              \n\
+static const char* fShader{ "												\n\
 #version 330                                                                \n\
                                                                             \n\
 out vec4 colour;                                                            \n\
@@ -45,14 +47,14 @@ out vec4 colour;                                                            \n\
 void main()                                                                 \n\
 {                                                                           \n\
     colour = vec4(1.0, 0.0, 0.0, 1.0);                                      \n\
-}";
+}" };
 
 void CreateTriangle()
 {
-	GLfloat vertices[] = {
+	float vertices[] = {
 		-1.0f, -1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f
+		 1.0f, -1.0f, 0.0f,
+		 0.0f,  1.0f, 0.0f
 	};
 
 	glGenVertexArrays(1, &VAO);
@@ -70,25 +72,25 @@ void CreateTriangle()
 	glBindVertexArray(0);
 }
 
-void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
+void AddShader(uint32_t theProgram, const char* shaderCode, int shaderType)
 {
-	GLuint theShader = glCreateShader(shaderType);
+	uint32_t theShader{ glCreateShader(shaderType) };
 
-	const GLchar* theCode[1];
-	theCode[0] = shaderCode;
+	const char* theCode[1]{ };
+	theCode[0] = { shaderCode };
 
-	GLint codeLength[1];
-	codeLength[0] = (GLint)strlen(shaderCode);
+	int codeLength[1]{ };
+	codeLength[0] = strlen(shaderCode);
 
 	glShaderSource(theShader, 1, theCode, codeLength);
 	glCompileShader(theShader);
 
-	GLint result = 0;
-	GLchar eLog[1024] = { 0 };
+	int result{ 0 };
 
 	glGetShaderiv(theShader, GL_COMPILE_STATUS, &result);
 	if (!result)
 	{
+		char eLog[1024]{ 0 };
 		glGetShaderInfoLog(theShader, 1024, NULL, eLog);
 		fprintf(stderr, "Error compiling the %d shader: '%s'\n", shaderType, eLog);
 		return;
@@ -99,7 +101,7 @@ void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
 
 void CompileShaders()
 {
-	shader = glCreateProgram();
+	shader = { glCreateProgram() };
 
 	if (!shader)
 	{
@@ -110,8 +112,8 @@ void CompileShaders()
 	AddShader(shader, vShader, GL_VERTEX_SHADER);
 	AddShader(shader, fShader, GL_FRAGMENT_SHADER);
 
-	GLint result = 0;
-	GLchar eLog[1024] = { 0 };
+	int result{ };
+	char eLog[1024]{ 0 };
 
 	glLinkProgram(shader);
 	glGetProgramiv(shader, GL_LINK_STATUS, &result);
@@ -154,7 +156,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	// Create the window
-	GLFWwindow* mainWindow = glfwCreateWindow(WIDTH, HEIGHT, "Test Window", NULL, NULL);
+	GLFWwindow* mainWindow{ glfwCreateWindow(WIDTH, HEIGHT, "Test Window", NULL, NULL) };
 	if (!mainWindow)
 	{
 		printf("GLFW window creation failed!");
@@ -163,14 +165,14 @@ int main()
 	}
 
 	// Get Buffer Size information
-	int bufferWidth, bufferHeight;
+	int bufferWidth{ }, bufferHeight{ };
 	glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferHeight);
 
 	// Set context for GLEW to use
 	glfwMakeContextCurrent(mainWindow);
 
 	// Allow modern extension features
-	glewExperimental = GL_TRUE;
+	glewExperimental = { GL_TRUE };
 
 	if (glewInit() != GLEW_OK)
 	{
@@ -205,14 +207,22 @@ int main()
 			direction = !direction;
 		}
 
-		// Clear window
+		CurrentAngle += 1.0f; // course: 0.001f, Rotation speed.
+		if (CurrentAngle >= 360)
+		{
+			CurrentAngle -= 360;
+		}
+
+		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(shader);
 
 		glm::mat4 model(1.0f);
-		model = glm::translate(model, glm::vec3(triOffset, triOffset, 0.0f));
+		model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f));
+		model = glm::rotate(model, (CurrentAngle* ToRadians), glm::vec3(0.0f, 0.0f, 1.0f));
+
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 
