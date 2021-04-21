@@ -24,6 +24,11 @@ float triMaxOffset{ 0.7f };
 float triIncrement{ 0.0005f };
 float CurrentAngle{ 0.0f };
 
+bool SizeDirection{ true };
+float CurrentSize{ 0.4f };
+float MaxSize{ 0.8f };
+float MinSize{ 0.1f };
+
 // Vertex Shader code
 static const char* vShader{ "												\n\
 #version 330                                                                \n\
@@ -34,7 +39,7 @@ uniform mat4 model;															\n\
                                                                             \n\
 void main()                                                                 \n\
 {                                                                           \n\
-    gl_Position = model * vec4(pos.x * 0.4, pos.y * 0.4, pos.z, 1.0);		\n\
+    gl_Position = model * vec4(pos, 1.0);									\n\
 }" };
 
 // Fragment Shader
@@ -206,10 +211,24 @@ int main()
 			direction = !direction;
 		}
 
-		CurrentAngle += 1.0f; // course: 0.001f, Rotation speed.
+		CurrentAngle += 1.0f; // ???? The course has this set to 0.001f, which causes it to rotate a lot slower for me.
 		if (CurrentAngle >= 360)
 		{
 			CurrentAngle -= 360;
+		}
+
+		if (SizeDirection)
+		{
+			CurrentSize += 0.0001f;
+		}
+		else
+		{
+			CurrentSize -= 0.0001f;
+		}
+
+		if ((CurrentSize >= MaxSize) || (CurrentSize <= MinSize))
+		{
+			SizeDirection = { !SizeDirection };
 		}
 
 		// Clear the window
@@ -221,6 +240,7 @@ int main()
 		glm::mat4 model(1.0f);
 		model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(CurrentAngle), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(CurrentSize, CurrentSize, 1.0f));
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 
