@@ -30,27 +30,32 @@ float MaxSize{ 0.8f };
 float MinSize{ 0.1f };
 
 // Vertex Shader code
-static const char* vShader{ "												\n\
-#version 330                                                                \n\
-                                                                            \n\
-layout (location = 0) in vec3 pos;											\n\
-                                                                            \n\
-uniform mat4 model;															\n\
-                                                                            \n\
-void main()                                                                 \n\
-{                                                                           \n\
-    gl_Position = model * vec4(pos, 1.0);									\n\
+static const char* vShader{ "						\n\
+#version 330										\n\
+													\n\
+layout (location = 0) in vec3 pos;					\n\
+													\n\
+out vec4 VColour;									\n\
+													\n\
+uniform mat4 model;									\n\
+													\n\
+void main()											\n\
+{													\n\
+	gl_Position = model * vec4(pos, 1.0);			\n\
+	VColour = vec4(clamp(pos, 0.0f, 1.0f), 1.0f);	\n\
 }" };
 
 // Fragment Shader
-static const char* fShader{ "												\n\
-#version 330                                                                \n\
-                                                                            \n\
-out vec4 colour;                                                            \n\
-                                                                            \n\
-void main()                                                                 \n\
-{                                                                           \n\
-    colour = vec4(1.0, 0.0, 0.0, 1.0);                                      \n\
+static const char* fShader{ "						\n\
+#version 330										\n\
+													\n\
+in vec4 VColour;									\n\
+													\n\
+out vec4 colour;									\n\
+													\n\
+void main()											\n\
+{													\n\
+	colour = VColour;								\n\
 }" };
 
 void CreateTriangle()
@@ -83,10 +88,7 @@ void AddShader(uint32_t theProgram, const char* shaderCode, int shaderType)
 	const char* theCode[1]{ };
 	theCode[0] = { shaderCode };
 
-	int codeLength[1]{ };
-	codeLength[0] = strlen(shaderCode);
-
-	glShaderSource(theShader, 1, theCode, codeLength);
+	glShaderSource(theShader, 1, theCode, NULL);
 	glCompileShader(theShader);
 
 	int result{ 0 };
@@ -238,9 +240,9 @@ int main()
 		glUseProgram(shader);
 
 		glm::mat4 model(1.0f);
-		model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(CurrentAngle), glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, glm::vec3(CurrentSize, CurrentSize, 1.0f));
+		//model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(CurrentAngle), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 
