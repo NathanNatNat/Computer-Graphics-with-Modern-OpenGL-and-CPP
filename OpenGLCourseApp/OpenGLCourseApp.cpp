@@ -16,7 +16,7 @@
 // Window dimensions
 const int WIDTH{ 800 }, HEIGHT{ 600 };
 
-uint32_t VBO{ }, VAO{ }, IBO{ }, shader{ }, uniformModel{ };
+uint32_t VBO{ }, VAO{ }, IBO{ }, shader{ }, uniformModel{ }, uniformProjection{ };
 
 bool direction{ true };
 float triOffset{ 0.0f };
@@ -30,19 +30,20 @@ float MaxSize{ 0.8f };
 float MinSize{ 0.1f };
 
 // Vertex Shader code
-static const char* vShader{ "						\n\
-#version 330										\n\
-													\n\
-layout (location = 0) in vec3 pos;					\n\
-													\n\
-out vec4 VColour;									\n\
-													\n\
-uniform mat4 model;									\n\
-													\n\
-void main()											\n\
-{													\n\
-	gl_Position = model * vec4(pos, 1.0);			\n\
-	VColour = vec4(clamp(pos, 0.0f, 1.0f), 1.0f);	\n\
+static const char* vShader{ "							\n\
+#version 330											\n\
+														\n\
+layout (location = 0) in vec3 pos;						\n\
+														\n\
+out vec4 VColour;										\n\
+														\n\
+uniform mat4 model;										\n\
+uniform mat4 projection;								\n\
+														\n\
+void main()												\n\
+{														\n\
+	gl_Position = projection * model * vec4(pos, 1.0);	\n\
+	VColour = vec4(clamp(pos, 0.0f, 1.0f), 1.0f);		\n\
 }" };
 
 // Fragment Shader
@@ -87,7 +88,7 @@ void CreateTriangle()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -155,6 +156,7 @@ void CompileShaders()
 	}
 
 	uniformModel = glGetUniformLocation(shader, "model");
+	uniformProjection = glGetUniformLocation(shader, "projection");
 }
 
 int main()
@@ -174,7 +176,7 @@ int main()
 	// Core Profile
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	// Allow Forward Compatbility
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
 
 	// Create the window
 	GLFWwindow* mainWindow{ glfwCreateWindow(WIDTH, HEIGHT, "Test Window", NULL, NULL) };
@@ -193,7 +195,7 @@ int main()
 	glfwMakeContextCurrent(mainWindow);
 
 	// Allow modern extension features
-	glewExperimental = { GL_TRUE };
+	glewExperimental = { true };
 
 	if (glewInit() != GLEW_OK)
 	{
@@ -210,6 +212,8 @@ int main()
 
 	CreateTriangle();
 	CompileShaders();
+
+	glm::mat4 projection = glm::perspective(45.0f, (float)bufferWidth / (float)bufferHeight, 0.1f, 100.0f);
 
 	// Loop until window closed
 	while (!glfwWindowShouldClose(mainWindow))
@@ -257,11 +261,12 @@ int main()
 		glUseProgram(shader);
 
 		glm::mat4 model(1.0f);
-		//model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
 		model = glm::rotate(model, glm::radians(CurrentAngle), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
 
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(uniformModel, 1, false, glm::value_ptr(model));
+		glUniformMatrix4fv(uniformProjection, 1, false, glm::value_ptr(projection));
 
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
