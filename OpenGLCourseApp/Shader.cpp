@@ -123,11 +123,11 @@ void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderT
 	glCompileShader(theShader);
 
 	GLint result = 0;
-	GLchar eLog[1024] = { 0 };
 
 	glGetShaderiv(theShader, GL_COMPILE_STATUS, &result);
 	if (!result)
 	{
+		GLchar eLog[1024] = { 0 };
 		glGetShaderInfoLog(theShader, sizeof(eLog), NULL, eLog);
 		printf("Error compiling the %d shader: '%s'\n", shaderType, eLog);
 		return;

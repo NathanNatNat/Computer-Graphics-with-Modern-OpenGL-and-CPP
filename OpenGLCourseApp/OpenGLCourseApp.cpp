@@ -62,7 +62,6 @@ void CreateShaders()
 
 int main()
 {
-
 	mainWindow = Window(800, 600);
 	mainWindow.Initialise();
 
