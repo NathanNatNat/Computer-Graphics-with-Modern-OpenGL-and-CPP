@@ -26,10 +26,10 @@ GLfloat
 	LastTime{ };
 
 // Vertex Shader
-static const char* vShader = "Shaders/shader.vert";
+static const char* vShader = "Shaders/shader_vert.glsl";
 
 // Fragment Shader
-static const char* fShader = "Shaders/shader.frag";
+static const char* fShader = "Shaders/shader_frag.glsl";
 
 void CreateObjects()
 {
