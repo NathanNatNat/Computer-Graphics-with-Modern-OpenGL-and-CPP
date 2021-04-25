@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLCourse", "OpenGLCourse\OpenGLCourse.vcxproj", "{1CA190B9-EE4C-471F-9793-8FADEA39BD6A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1CA190B9-EE4C-471F-9793-8FADEA39BD6A}.Release|x64.ActiveCfg = Release|x64
+		{1CA190B9-EE4C-471F-9793-8FADEA39BD6A}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A6BAC862-74FB-4F83-9AD4-6FB274C56C27}
+	EndGlobalSection
+EndGlobal
