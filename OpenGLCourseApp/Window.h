@@ -25,8 +25,8 @@ public:
 
 	bool* getsKeys() { return keys; }
 
-	GLdouble GetXChange();
-	GLdouble GetYChange();
+	GLfloat GetXChange();
+	GLfloat GetYChange();
 
 	void swapBuffers() { glfwSwapBuffers(mainWindow); }
 
@@ -45,7 +45,7 @@ private:
 		bufferWidth{ }, 
 		bufferHeight{ };
 
-	GLdouble
+	GLfloat
 		LastX{ }, 
 		LastY{ }, 
 		XChange{ }, 
@@ -53,5 +53,5 @@ private:
 	
 	void CreateCallBacks();
 	static void HandleKeys(GLFWwindow* Window, int Key, int Code, int Action, int Mode);
-	static void HandleMouse(GLFWwindow* window, double XPos, double YPos);
+	static void HandleMouse(GLFWwindow* window, GLdouble XPos, GLdouble YPos);
 };

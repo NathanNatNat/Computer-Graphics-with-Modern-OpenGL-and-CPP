@@ -13,12 +13,18 @@ Window::Window()
 	{
 		keys[i] = { 0 };
 	}
+
+	XChange = 0.0f;
+	YChange = 0.0f;
 }
 
 Window::Window(GLint windowWidth, GLint windowHeight)
 {
 	width = windowWidth;
 	height = windowHeight;
+
+	XChange = 0.0f;
+	YChange = 0.0f;
 }
 
 int Window::Initialise()
@@ -86,16 +92,16 @@ void Window::CreateCallBacks()
 	glfwSetCursorPosCallback(mainWindow, HandleMouse);
 }
 
-GLdouble Window::GetXChange()
+GLfloat Window::GetXChange()
 {
-	GLdouble TheChange = XChange;
+	GLfloat TheChange = XChange;
 	XChange = 0.0f;
 	return TheChange;
 }
 
-GLdouble Window::GetYChange()
+GLfloat Window::GetYChange()
 {
-	GLdouble TheChange = YChange;
+	GLfloat TheChange = YChange;
 	YChange = 0.0f;
 	return TheChange;
 }
@@ -124,7 +130,7 @@ void Window::HandleKeys(GLFWwindow* window, int Key, int Code, int Action, int M
 	}
 }
 
-void Window::HandleMouse(GLFWwindow* window, double XPos, double YPos)
+void Window::HandleMouse(GLFWwindow* window, GLdouble XPos, GLdouble YPos)
 {
 	Window* TheWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
