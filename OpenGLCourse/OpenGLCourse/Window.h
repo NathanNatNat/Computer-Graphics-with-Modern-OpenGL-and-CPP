@@ -3,9 +3,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #pragma once
-
 #include "stdio.h"
-
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 
@@ -14,36 +12,36 @@ class Window
 public:
 	Window();
 
-	Window(GLint windowWidth, GLint windowHeight);
+	Window(GLint WindowWidth, GLint WindowHeight);
 
 	int Initialise();
 
-	GLint getBufferWidth() { return bufferWidth; }
-	GLint getBufferHeight() { return bufferHeight; }
+	GLint GetBufferWidth() { return BufferWidth; }
+	GLint GetBufferHeight() { return BufferHeight; }
 
-	bool getShouldClose() { return glfwWindowShouldClose(mainWindow); }
+	bool GetShouldClose() { return glfwWindowShouldClose(MainWindow); }
 
-	bool* getsKeys() { return keys; }
+	bool* GetKeys() { return Keys; }
 
 	GLfloat GetXChange();
 	GLfloat GetYChange();
 
-	void swapBuffers() { glfwSwapBuffers(mainWindow); }
+	void SwapBuffers() { glfwSwapBuffers(MainWindow); }
 
 	~Window();
 
 private:
-	GLFWwindow* mainWindow{ };
+	GLFWwindow* MainWindow{ };
 
 	bool
-		keys[1024]{ },
+		Keys[1024]{ },
 		MouseFirstMoved{ };
 
 	GLint 
-		width{ }, 
-		height{ },
-		bufferWidth{ }, 
-		bufferHeight{ };
+		Width{ }, 
+		Height{ },
+		BufferWidth{ }, 
+		BufferHeight{ };
 
 	GLfloat
 		LastX{ }, 

@@ -3,12 +3,10 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #pragma once
-
 #include <stdio.h>
 #include <string>
 #include <iostream>
 #include <fstream>
-
 #include <GL\glew.h>
 
 class Shader
@@ -16,10 +14,10 @@ class Shader
 public:
 	Shader();
 
-	void CreateFromString(const char* vertexCode, const char* fragmentCode);
-	void CreateFromFiles(const char* vertexLocation, const char* fragmentLocation);
+	void CreateFromString(const char* VertexCode, const char* FragmentCode);
+	void CreateFromFiles(const char* VertexLocation, const char* FragmentLocation);
 
-	std::string ReadFile(const char* fileLocation);
+	std::string ReadFile(const char* FileLocation);
 
 	GLuint GetProjectionLocation();
 	GLuint GetModelLocation();
@@ -32,11 +30,11 @@ public:
 
 private:
 	GLuint
-		shaderID{ },
-		uniformProjection{ },
-		uniformModel{ },
-		uniformView{ };
+		ShaderID{ },
+		UniformProjection{ },
+		UniformModel{ },
+		UniformView{ };
 
-	void CompileShader(const char* vertexCode, const char* fragmentCode);
-	void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);
+	void CompileShader(const char* VertexCode, const char* FragmentCode);
+	void AddShader(GLuint TheProgram, const char* ShaderCode, GLenum ShaderType);
 };

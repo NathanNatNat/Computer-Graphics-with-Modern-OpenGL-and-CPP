@@ -3,25 +3,27 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #include "Window.h"
+#define OPENGL_VERSION_MAJOR_4 4
+#define OPENGL_VERSION_MINOR_6 6
 
 Window::Window()
 {
-	width = 800;
-	height = 600;
+	Width = 800;
+	Height = 600;
 
 	for (size_t i = 0; i < 1024; i++)
 	{
-		keys[i] = { 0 };
+		Keys[i] = { 0 };
 	}
 
 	XChange = 0.0f;
 	YChange = 0.0f;
 }
 
-Window::Window(GLint windowWidth, GLint windowHeight)
+Window::Window(GLint WindowWidth, GLint WindowHeight)
 {
-	width = windowWidth;
-	height = windowHeight;
+	Width = WindowWidth;
+	Height = WindowHeight;
 
 	XChange = 0.0f;
 	YChange = 0.0f;
@@ -38,16 +40,16 @@ int Window::Initialise()
 
 	// Setup GLFW Windows Properties
 	// OpenGL version
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPENGL_VERSION_MAJOR_4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPENGL_VERSION_MINOR_6);
 	// Core Profile
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	// Allow forward compatiblity
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	// Create the window
-	mainWindow = glfwCreateWindow(width, height, "Test Window", NULL, NULL);
-	if (!mainWindow)
+	MainWindow = glfwCreateWindow(Width, Height, "Test Window", NULL, NULL);
+	if (!MainWindow)
 	{
 		printf("Error creating GLFW window!");
 		glfwTerminate();
@@ -55,10 +57,10 @@ int Window::Initialise()
 	}
 
 	// Get buffer size information
-	glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferHeight);
+	glfwGetFramebufferSize(MainWindow, &BufferWidth, &BufferHeight);
 
 	// Set the current context
-	glfwMakeContextCurrent(mainWindow);
+	glfwMakeContextCurrent(MainWindow);
 
 	// Handle key and mouse input.
 	CreateCallBacks();
@@ -67,11 +69,11 @@ int Window::Initialise()
 	// Allow modern extension access
 	glewExperimental = GL_TRUE;
 
-	GLenum error = glewInit();
-	if (error != GLEW_OK)
+	GLenum Error = glewInit();
+	if (Error != GLEW_OK)
 	{
-		printf("Error: %s", glewGetErrorString(error));
-		glfwDestroyWindow(mainWindow);
+		printf("Error: %s", glewGetErrorString(Error));
+		glfwDestroyWindow(MainWindow);
 		glfwTerminate();
 		return 1;
 	}
@@ -79,17 +81,17 @@ int Window::Initialise()
 	glEnable(GL_DEPTH_TEST);
 
 	// Create Viewport
-	glViewport(0, 0, bufferWidth, bufferHeight);
+	glViewport(0, 0, BufferWidth, BufferHeight);
 
-	glfwSetWindowUserPointer(mainWindow, this);
+	glfwSetWindowUserPointer(MainWindow, this);
 
 	return 0;
 }
 
 void Window::CreateCallBacks()
 {
-	glfwSetKeyCallback(mainWindow, HandleKeys);
-	glfwSetCursorPosCallback(mainWindow, HandleMouse);
+	glfwSetKeyCallback(MainWindow, HandleKeys);
+	glfwSetCursorPosCallback(MainWindow, HandleMouse);
 }
 
 GLfloat Window::GetXChange()
@@ -119,12 +121,12 @@ void Window::HandleKeys(GLFWwindow* window, int Key, int Code, int Action, int M
 	{
 		if (Action == GLFW_PRESS)
 		{
-			TheWindow->keys[Key] = true;
+			TheWindow->Keys[Key] = true;
 			//printf("Pressed: %d\n", Key);
 		}
 		else if (Action == GLFW_RELEASE)
 		{
-			TheWindow->keys[Key] = false;
+			TheWindow->Keys[Key] = false;
 			//printf("Released: %d\n", Key);
 		}
 	}
@@ -136,22 +138,22 @@ void Window::HandleMouse(GLFWwindow* window, GLdouble XPos, GLdouble YPos)
 
 	if (TheWindow->MouseFirstMoved)
 	{
-		TheWindow->LastX = XPos;
-		TheWindow->LastY = YPos;
+		TheWindow->LastX = (GLfloat)XPos;
+		TheWindow->LastY = (GLfloat)YPos;
 		TheWindow->MouseFirstMoved = false;
 	}
 
-	TheWindow->XChange = XPos - TheWindow->LastX;
-	TheWindow->YChange = TheWindow->LastY - YPos;
+	TheWindow->XChange = (GLfloat)XPos - TheWindow->LastX;
+	TheWindow->YChange = TheWindow->LastY - (GLfloat)YPos;
 
-	TheWindow->LastX = XPos;
-	TheWindow->LastY = YPos;
+	TheWindow->LastX = (GLfloat)XPos;
+	TheWindow->LastY = (GLfloat)YPos;
 
 	//printf("x: %.6f, y:%.6f\n", TheWindow->XChange, TheWindow->YChange);
 }
 
 Window::~Window()
 {
-	glfwDestroyWindow(mainWindow);
+	glfwDestroyWindow(MainWindow);
 	glfwTerminate();
 }

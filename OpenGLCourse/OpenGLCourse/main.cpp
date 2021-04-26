@@ -2,6 +2,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
+#define STB_IMAGE_IMPLEMENTATION
 #include <stdio.h>
 #include <string.h>
 #include <cmath>
@@ -15,72 +16,86 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "Texture.h"
 
-Window mainWindow;
-std::vector<Mesh*> meshList;
-std::vector<Shader> shaderList;
-Camera camera;
+Window MainWindow{ };
+std::vector<Mesh*> MeshList{ };
+std::vector<Shader> ShaderList{ };
+Camera camera{ };
 
-GLfloat
-	DeltaTime{ },
-	LastTime{ };
+Texture 
+	BrickTexture{ },
+	DirtTexture{ };
+
+GLfloat 
+	DeltaTime = { },
+	LastTime = { };
 
 // Vertex Shader
-static const char* vShader = "Shaders/shader_vert.glsl";
+static const char* VShader = { "Shaders/shader_vert.glsl" };
 
 // Fragment Shader
-static const char* fShader = "Shaders/shader_frag.glsl";
+static const char* FShader = { "Shaders/shader_frag.glsl" };
 
 void CreateObjects()
 {
-	GLuint indices[] = {
+	GLuint Indices[] = 
+	{
 		0, 3, 1,
 		1, 3, 2,
 		2, 3, 0,
 		0, 1, 2
 	};
 
-	GLfloat vertices[] = {
-		-1.0f, -1.0f, 0.0f,
-		0.0f, -1.0f, 1.0f,
-		1.0f, -1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f
+	GLfloat Vertices[] = 
+	{
+	   // X      Y     Z     U     V
+		-1.0f, -1.0f, 0.0f,	0.0f, 0.0f,
+		 0.0f, -1.0f, 1.0f,	0.5f, 0.0f,
+		 1.0f, -1.0f, 0.0f,	1.0f, 0.0f,
+		 0.0f,  1.0f, 0.0f,	0.5f, 1.0f
 	};
 
-	Mesh* obj1 = new Mesh();
-	obj1->CreateMesh(vertices, indices, 12, 12);
-	meshList.push_back(obj1);
+	Mesh* Obj1 = new Mesh();
+	Obj1->CreateMesh(Vertices, Indices, 20, 12);
+	MeshList.push_back(Obj1);
 
-	Mesh* obj2 = new Mesh();
-	obj2->CreateMesh(vertices, indices, 12, 12);
-	meshList.push_back(obj2);
+	Mesh* Obj2 = new Mesh();
+	Obj2->CreateMesh(Vertices, Indices, 20, 12);
+	MeshList.push_back(Obj2);
 }
 
 void CreateShaders()
 {
-	Shader* shader1 = new Shader();
-	shader1->CreateFromFiles(vShader, fShader);
-	shaderList.push_back(*shader1);
+	Shader* Shader1 = new Shader();
+	Shader1->CreateFromFiles(VShader, FShader);
+	ShaderList.push_back(*Shader1);
 }
 
 int main()
 {
-	mainWindow = Window(800, 600);
-	mainWindow.Initialise();
+	MainWindow = Window(800, 600);
+	MainWindow.Initialise();
 
 	CreateObjects();
 	CreateShaders();
-	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.2f);
 
-	GLuint
-		uniformProjection = 0,
-		uniformModel = 0,
-		uniformView = 0;
+	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.5f);
 
-	glm::mat4 projection = glm::perspective(glm::radians(45.0f), (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 100.0f);
+	BrickTexture = Texture((char*)("Textures/brick.png"));
+	BrickTexture.LoadTexture();
+	DirtTexture = Texture((char*)("Textures/dirt.png"));
+	DirtTexture.LoadTexture();
+
+	GLuint 
+		UniformProjection = { },
+		UniformModel = { },
+		UniformView = { };
+
+	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (GLfloat)MainWindow.GetBufferWidth() / MainWindow.GetBufferHeight(), 0.1f, 100.0f);
 
 	// Loop until window closed
-	while (!mainWindow.getShouldClose())
+	while (!MainWindow.GetShouldClose())
 	{
 		GLfloat Now = (GLfloat)glfwGetTime();
 		DeltaTime = Now - LastTime;
@@ -89,36 +104,38 @@ int main()
 		// Get + Handle User Input
 		glfwPollEvents();
 
-		camera.KeyControl(mainWindow.getsKeys(), DeltaTime);
-		camera.MouseControl(mainWindow.GetXChange(), mainWindow.GetYChange());
+		camera.KeyControl(MainWindow.GetKeys(), DeltaTime);
+		camera.MouseControl(MainWindow.GetXChange(), MainWindow.GetYChange());
 
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		shaderList[0].UseShader();
-		uniformModel = shaderList[0].GetModelLocation();
-		uniformProjection = shaderList[0].GetProjectionLocation();
-		uniformView = shaderList[0].GetViewLocation();
+		ShaderList[0].UseShader();
+		UniformModel = ShaderList[0].GetModelLocation();
+		UniformProjection = ShaderList[0].GetProjectionLocation();
+		UniformView = ShaderList[0].GetViewLocation();
 
-		glm::mat4 model(1.0f);
+		glm::mat4 Model(1.0f);
 
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
-		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix()));
-		meshList[0]->RenderMesh();
+		Model = glm::translate(Model, glm::vec3(0.0f, 0.0f, -2.5f));
+		Model = glm::scale(Model, glm::vec3(0.4f, 0.4f, 1.0f));
+		glUniformMatrix4fv(UniformModel, 1, GL_FALSE, glm::value_ptr(Model));
+		glUniformMatrix4fv(UniformProjection, 1, GL_FALSE, glm::value_ptr(Projection));
+		glUniformMatrix4fv(UniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix()));
+		BrickTexture.UseTexture();
+		MeshList[0]->RenderMesh();
 
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.5f));
-		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		meshList[1]->RenderMesh();
+		Model = glm::mat4(1.0f);
+		Model = glm::translate(Model, glm::vec3(0.0f, 1.0f, -2.5f));
+		Model = glm::scale(Model, glm::vec3(0.4f, 0.4f, 1.0f));
+		glUniformMatrix4fv(UniformModel, 1, GL_FALSE, glm::value_ptr(Model));
+		DirtTexture.UseTexture();
+		MeshList[1]->RenderMesh();
 
 		glUseProgram(0);
 
-		mainWindow.swapBuffers();
+		MainWindow.SwapBuffers();
 	}
 
 	return 0;

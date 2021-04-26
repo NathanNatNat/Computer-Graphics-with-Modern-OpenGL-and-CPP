@@ -11,7 +11,7 @@ class Mesh
 public:
 	Mesh();
 
-	void CreateMesh(GLfloat *vertices, const unsigned int *indices, const unsigned int numOfVertices, const unsigned int numOfIndices);
+	void CreateMesh(const GLfloat* Vertices, const GLuint* Indices, GLuint NumOfVertices, GLuint NumOfIndices);
 	void RenderMesh();
 	void ClearMesh();
 
@@ -23,6 +23,5 @@ private:
 		VBO{ },
 		IBO{ };
 
-	GLsizei 
-		indexCount{ };
+	GLint IndexCount{ };
 };
