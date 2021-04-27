@@ -6,10 +6,10 @@
 
 Mesh::Mesh()
 {
-	VAO = 0;
-	VBO = 0;
-	IBO = 0;
-	IndexCount = 0;
+	VAO = { };
+	VBO = { };
+	IBO = { };
+	IndexCount = { };
 }
 
 void Mesh::CreateMesh(const GLfloat* Vertices, const GLuint* Indices, GLuint NumOfVertices, GLuint NumOfIndices)
@@ -29,9 +29,9 @@ void Mesh::CreateMesh(const GLfloat* Vertices, const GLuint* Indices, GLuint Num
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertices[0]) * 8, 0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertices[0]) * 8, (void*)(sizeof(Vertices[0]) * 3));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertices[0]) * 8, reinterpret_cast<void*>(sizeof(Vertices[0]) * 3));
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertices[0]) * 8, (void*)(sizeof(Vertices[0]) * 5));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertices[0]) * 8, reinterpret_cast<void*>(sizeof(Vertices[0]) * 5));
 	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

@@ -8,25 +8,25 @@
 
 Window::Window()
 {
-	Width = 800;
-	Height = 600;
+	Width = { 800 };
+	Height = { 600 };
 
 	for (size_t i = 0; i < 1024; i++)
 	{
 		Keys[i] = { 0 };
 	}
 
-	XChange = 0.0f;
-	YChange = 0.0f;
+	XChange = { };
+	YChange = { };
 }
 
 Window::Window(GLint WindowWidth, GLint WindowHeight)
 {
-	Width = WindowWidth;
-	Height = WindowHeight;
+	Width = { WindowWidth };
+	Height = { WindowHeight };
 
-	XChange = 0.0f;
-	YChange = 0.0f;
+	XChange = { };
+	YChange = { };
 }
 
 int Window::Initialise()
@@ -138,16 +138,16 @@ void Window::HandleMouse(GLFWwindow* window, GLdouble XPos, GLdouble YPos)
 
 	if (TheWindow->MouseFirstMoved)
 	{
-		TheWindow->LastX = (GLfloat)XPos;
-		TheWindow->LastY = (GLfloat)YPos;
+		TheWindow->LastX = static_cast<GLfloat>(XPos);
+		TheWindow->LastY = static_cast<GLfloat>(YPos);
 		TheWindow->MouseFirstMoved = false;
 	}
 
-	TheWindow->XChange = (GLfloat)XPos - TheWindow->LastX;
-	TheWindow->YChange = TheWindow->LastY - (GLfloat)YPos;
+	TheWindow->XChange = static_cast<GLfloat>(XPos) - TheWindow->LastX;
+	TheWindow->YChange = TheWindow->LastY - static_cast<GLfloat>(YPos);
 
-	TheWindow->LastX = (GLfloat)XPos;
-	TheWindow->LastY = (GLfloat)YPos;
+	TheWindow->LastX = static_cast<GLfloat>(XPos);
+	TheWindow->LastY = static_cast<GLfloat>(YPos);
 
 	//printf("x: %.6f, y:%.6f\n", TheWindow->XChange, TheWindow->YChange);
 }

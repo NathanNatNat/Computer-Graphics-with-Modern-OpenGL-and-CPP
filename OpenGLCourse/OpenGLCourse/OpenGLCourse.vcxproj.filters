@@ -22,6 +22,9 @@
     <ClCompile Include="src\Light.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Material.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h">
@@ -40,6 +43,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Light.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Material.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

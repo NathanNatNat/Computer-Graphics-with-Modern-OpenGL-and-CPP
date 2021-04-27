@@ -88,6 +88,9 @@ void Shader::CompileShader(const char* VertexCode, const char* FragmentCode)
 	UniformAmbientIntensity = glGetUniformLocation(ShaderID, "directionalLight.ambientIntensity");
 	UniformDirection = glGetUniformLocation(ShaderID, "directionalLight.direction");
 	UniformDiffuseIntensity = glGetUniformLocation(ShaderID, "directionalLight.diffuseIntensity");
+	UniformSpecularIntensity = glGetUniformLocation(ShaderID, "material.specularIntensity");
+	UniformShininess = glGetUniformLocation(ShaderID, "material.shininess");
+	UniformEyePosition = glGetUniformLocation(ShaderID, "eyePosition");
 }
 
 GLuint Shader::GetProjectionLocation()
@@ -122,6 +125,19 @@ GLuint Shader::GetDirectionLocation()
 	return UniformDirection;
 }
 
+GLuint Shader::GetSpecularIntensityLocation()
+{
+	return UniformSpecularIntensity;
+}
+GLuint Shader::GetShininessLocation()
+{
+	return UniformShininess;
+}
+GLuint Shader::GetEyePositionLocation()
+{
+	return UniformEyePosition;
+}
+
 void Shader::UseShader()
 {
 	glUseProgram(ShaderID);
@@ -132,7 +148,7 @@ void Shader::ClearShader()
 	if (ShaderID != 0)
 	{
 		glDeleteProgram(ShaderID);
-		ShaderID = 0;
+		ShaderID = { };
 	}
 
 	UniformModel = { };
@@ -157,7 +173,7 @@ void Shader::AddShader(GLuint TheProgram, const char* ShaderCode, GLenum ShaderT
 	{
 		GLchar eLog[1024] = { 0 };
 		glGetShaderInfoLog(TheShader, sizeof(eLog), NULL, eLog);
-		printf("Error compiling the %d shader: '%s'\n", ShaderType, eLog);
+		printf("Error compiling the %d shader: '%s'\n", static_cast<GLint>(ShaderType), eLog);
 		return;
 	}
 

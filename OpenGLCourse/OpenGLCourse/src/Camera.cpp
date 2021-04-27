@@ -22,7 +22,7 @@ Camera::Camera(glm::vec3 StartPosition, glm::vec3 StartUp, GLfloat StartYaw, GLf
 	Update();
 }
 
-void Camera::KeyControl(bool* Keys, GLfloat DeltaTime)
+void Camera::KeyControl(const bool* Keys, GLfloat DeltaTime)
 {
 	GLfloat Velocity = MovementSpeed * DeltaTime;
 
@@ -71,6 +71,11 @@ void Camera::MouseControl(GLfloat XChange, GLfloat YChange)
 glm::mat4 Camera::CalculateViewMatrix()
 {
 	return glm::lookAt(Position, Position + Front, Up);
+}
+
+glm::vec3 Camera::GetCameraPosition()
+{
+	return Position;
 }
 
 void Camera::Update()
