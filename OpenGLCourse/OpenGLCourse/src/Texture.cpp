@@ -6,20 +6,20 @@
 
 Texture::Texture()
 {
-	TextureID = 0;
-	Width = 0;
-	Height = 0;
-	BitDepth = 0;
-	FileLocation = nullptr;
+	TextureID = { };
+	Width = { };
+	Height = { };
+	BitDepth = { };
+	FileLocation = { nullptr };
 }
 
 Texture::Texture(char* FileLoc)
 {
-	TextureID = 0;
-	Width = 0;
-	Height = 0;
-	BitDepth = 0;
-	FileLocation = FileLoc;
+	TextureID = { };
+	Width = { };
+	Height = { };
+	BitDepth = { };
+	FileLocation = { FileLoc };
 }
 
 void Texture::LoadTexture()
@@ -56,11 +56,11 @@ void Texture::UseTexture()
 void Texture::ClearTexture()
 {
 	glDeleteTextures(1, &TextureID);
-	TextureID = 0;
-	Width = 0;
-	Height = 0;
-	BitDepth = 0;
-	FileLocation = nullptr;
+	TextureID = { };
+	Width = { };
+	Height = { };
+	BitDepth = { };
+	FileLocation = { nullptr };
 }
 
 

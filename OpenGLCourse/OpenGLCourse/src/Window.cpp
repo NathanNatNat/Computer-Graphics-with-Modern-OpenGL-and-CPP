@@ -97,14 +97,14 @@ void Window::CreateCallBacks()
 GLfloat Window::GetXChange()
 {
 	GLfloat TheChange = XChange;
-	XChange = 0.0f;
+	XChange = { };
 	return TheChange;
 }
 
 GLfloat Window::GetYChange()
 {
 	GLfloat TheChange = YChange;
-	YChange = 0.0f;
+	YChange = { };
 	return TheChange;
 }
 

@@ -17,6 +17,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Texture.h"
+#include "Light.h"
 
 Window MainWindow{ };
 std::vector<Mesh*> MeshList{ };
@@ -26,6 +27,8 @@ Camera camera{ };
 Texture 
 	BrickTexture{ },
 	DirtTexture{ };
+
+Light MainLight;
 
 GLfloat 
 	DeltaTime = { },
@@ -87,10 +90,14 @@ int main()
 	DirtTexture = Texture((char*)("Textures/dirt.png"));
 	DirtTexture.LoadTexture();
 
-	GLuint 
+	MainLight = Light(1.0f, 1.0f, 1.0f, 0.2f);
+
+	GLuint
 		UniformProjection = { },
 		UniformModel = { },
-		UniformView = { };
+		UniformView = { },
+		UniformAmbientIntensity = { },
+		UniformAmbientColour = { };
 
 	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (GLfloat)MainWindow.GetBufferWidth() / MainWindow.GetBufferHeight(), 0.1f, 100.0f);
 
@@ -105,7 +112,7 @@ int main()
 		glfwPollEvents();
 
 		camera.KeyControl(MainWindow.GetKeys(), DeltaTime);
-		camera.MouseControl(MainWindow.GetXChange(), MainWindow.GetYChange());
+		//camera.MouseControl(MainWindow.GetXChange(), MainWindow.GetYChange());
 
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -115,6 +122,10 @@ int main()
 		UniformModel = ShaderList[0].GetModelLocation();
 		UniformProjection = ShaderList[0].GetProjectionLocation();
 		UniformView = ShaderList[0].GetViewLocation();
+		UniformAmbientColour = ShaderList[0].GetAmbientColourLocation();
+		UniformAmbientIntensity = ShaderList[0].GetAmbientIntensityLocation();
+
+		MainLight.UseLight(UniformAmbientIntensity, UniformAmbientColour);
 
 		glm::mat4 Model(1.0f);
 
