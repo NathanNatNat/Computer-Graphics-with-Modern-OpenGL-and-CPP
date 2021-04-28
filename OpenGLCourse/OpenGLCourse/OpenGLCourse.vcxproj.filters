@@ -34,6 +34,9 @@
     <ClCompile Include="src\SpotLight.cpp">
       <Filter>src\Lights</Filter>
     </ClCompile>
+    <ClCompile Include="src\Model.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h">
@@ -68,6 +71,9 @@
     </ClInclude>
     <ClInclude Include="src\SpotLight.h">
       <Filter>src\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Model.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
