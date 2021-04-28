@@ -22,5 +22,5 @@ private:
 		VBO{ },
 		IBO{ };
 
-	GLint IndexCount{ };
+	GLuint IndexCount{ };
 };

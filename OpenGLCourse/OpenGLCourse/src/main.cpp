@@ -17,23 +17,27 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Texture.h"
-#include "Light.h"
 #include "Material.h"
+#include "CommonValues.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
 
 Window MainWindow{ };
 std::vector<Mesh*> MeshList{ };
 std::vector<Shader> ShaderList{ };
 Camera camera{ };
 
-Texture 
+Texture
 	BrickTexture{ },
-	DirtTexture{ };
+	DirtTexture{ },
+	PlainTexture{ };
 
 Material 
 	ShinyMaterial{ },
 	DullMaterial{ };
 
-Light MainLight;
+DirectionalLight MainLight;
+PointLight PointLights[MAX_POINT_LIGHTS];
 
 GLfloat 
 	DeltaTime = { },
@@ -91,6 +95,20 @@ void CreateObjects()
 		 0.0f,  1.0f,  0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f
 	};
 
+	unsigned int FloorIndices[] = 
+	{
+		0, 2, 1,
+		1, 2, 3
+	};
+
+	GLfloat FloorVertices[] = 
+	{
+		-10.0f, 0.0f, -10.0f, 0.0f,  0.0f,	0.0f, -1.0f, 0.0f,
+		 10.0f, 0.0f, -10.0f, 10.0f, 0.0f,	0.0f, -1.0f, 0.0f,
+		-10.0f, 0.0f,  10.0f, 0.0f,  10.0f,	0.0f, -1.0f, 0.0f,
+		 10.0f, 0.0f,  10.0f, 10.0f, 10.0f,	0.0f, -1.0f, 0.0f
+	};
+
 	calcAverageNormals(Indices, 12, Vertices, 32, 8, 5);
 
 	Mesh* Obj1 = new Mesh();
@@ -100,6 +118,10 @@ void CreateObjects()
 	Mesh* Obj2 = new Mesh();
 	Obj2->CreateMesh(Vertices, Indices, 32, 12);
 	MeshList.push_back(Obj2);
+
+	Mesh* Obj3 = new Mesh();
+	Obj3->CreateMesh(FloorVertices, FloorIndices, 32, 6);
+	MeshList.push_back(Obj3);
 }
 
 void CreateShaders()
@@ -123,21 +145,33 @@ int main()
 	BrickTexture.LoadTexture();
 	DirtTexture = Texture(const_cast<char*>("Textures/dirt.png"));
 	DirtTexture.LoadTexture();
+	PlainTexture = Texture(const_cast<char*>("Textures/plain.png"));
+	PlainTexture.LoadTexture();
 
-	ShinyMaterial = Material(1.0f, 32.0f);
+	ShinyMaterial = Material(4.0f, 256.0f);
 	DullMaterial = Material(0.3f, 4.0f);
 
-	MainLight = Light(1.0f, 1.0f, 1.0f, 0.1f, 0.0f, 0.0f, -1.0f, 0.3f);
+	MainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
+		0.0f, 0.0f,
+		0.0f, 0.0f, -1.0f);
+
+	unsigned int PointLightCount = 0;
+	PointLights[0] = PointLight(0.0f, 0.0f, 1.0f,
+		0.0f, 1.0f,
+		0.0f, 0.0f, 0.0f,
+		0.3f, 0.2f, 0.1f);
+	PointLightCount++;
+	PointLights[1] = PointLight(0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f,
+		-4.0f, 2.0f, 0.0f,
+		0.3f, 0.1f, 0.1f);
+	PointLightCount++;
 
 	GLuint
 		UniformProjection = { },
 		UniformModel = { },
 		UniformView = { },
 		UniformEyePosition = { },
-		UniformAmbientIntensity = { },
-		UniformAmbientColour = { },
-		UniformDirection = { },
-		UniformDiffuseIntensity = { },
 		UniformSpecularIntensity = { },
 		UniformShininess = { };
 
@@ -164,15 +198,12 @@ int main()
 		UniformModel = ShaderList[0].GetModelLocation();
 		UniformProjection = ShaderList[0].GetProjectionLocation();
 		UniformView = ShaderList[0].GetViewLocation();
-		UniformAmbientColour = ShaderList[0].GetAmbientColourLocation();
-		UniformAmbientIntensity = ShaderList[0].GetAmbientIntensityLocation();
-		UniformDirection = ShaderList[0].GetDirectionLocation();
-		UniformDiffuseIntensity = ShaderList[0].GetDiffuseIntensityLocation();
 		UniformEyePosition = ShaderList[0].GetEyePositionLocation();
 		UniformSpecularIntensity = ShaderList[0].GetSpecularIntensityLocation();
 		UniformShininess = ShaderList[0].GetShininessLocation();
 
-		MainLight.UseLight(UniformAmbientIntensity, UniformAmbientColour, UniformDiffuseIntensity, UniformDirection);
+		ShaderList[0].SetDirectionalLight(&MainLight);
+		ShaderList[0].SetPointLights(PointLights, PointLightCount);
 
 		glUniformMatrix4fv(UniformProjection, 1, GL_FALSE, glm::value_ptr(Projection));
 		glUniformMatrix4fv(UniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix()));
@@ -196,6 +227,14 @@ int main()
 		DirtTexture.UseTexture();
 		DullMaterial.UseMaterial(UniformSpecularIntensity, UniformShininess);
 		MeshList[1]->RenderMesh();
+
+		Model = glm::mat4(1.0f);
+		Model = glm::translate(Model, glm::vec3(0.0f, -2.0f, 0.0f));
+		//model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+		glUniformMatrix4fv(UniformModel, 1, GL_FALSE, glm::value_ptr(Model));
+		PlainTexture.UseTexture();
+		ShinyMaterial.UseMaterial(UniformSpecularIntensity, UniformShininess);
+		MeshList[2]->RenderMesh();
 
 		glUseProgram(0);
 
