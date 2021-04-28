@@ -19,17 +19,20 @@
     <ClCompile Include="src\Window.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Light.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\Material.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\DirectionalLight.cpp">
-      <Filter>src</Filter>
+      <Filter>src\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Light.cpp">
+      <Filter>src\Lights</Filter>
     </ClCompile>
     <ClCompile Include="src\PointLight.cpp">
-      <Filter>src</Filter>
+      <Filter>src\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SpotLight.cpp">
+      <Filter>src\Lights</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -48,25 +51,31 @@
     <ClInclude Include="src\Window.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Light.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\Material.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\CommonValues.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Light.h">
+      <Filter>src\Lights</Filter>
+    </ClInclude>
     <ClInclude Include="src\DirectionalLight.h">
-      <Filter>src</Filter>
+      <Filter>src\Lights</Filter>
     </ClInclude>
     <ClInclude Include="src\PointLight.h">
-      <Filter>src</Filter>
+      <Filter>src\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SpotLight.h">
+      <Filter>src\Lights</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
       <UniqueIdentifier>{60b9290a-82bb-48bb-b946-7686080529ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Lights">
+      <UniqueIdentifier>{1ed1414a-2d06-4be7-814d-f90000670a7f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

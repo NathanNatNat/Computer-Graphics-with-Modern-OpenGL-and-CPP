@@ -21,6 +21,7 @@
 #include "CommonValues.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 
 Window MainWindow{ };
 std::vector<Mesh*> MeshList{ };
@@ -38,6 +39,7 @@ Material
 
 DirectionalLight MainLight;
 PointLight PointLights[MAX_POINT_LIGHTS];
+SpotLight SpotLights[MAX_SPOT_LIGHTS];
 
 GLfloat 
 	DeltaTime = { },
@@ -152,20 +154,36 @@ int main()
 	DullMaterial = Material(0.3f, 4.0f);
 
 	MainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-		0.0f, 0.0f,
+		0.1f, 0.1f,
 		0.0f, 0.0f, -1.0f);
 
 	unsigned int PointLightCount = 0;
 	PointLights[0] = PointLight(0.0f, 0.0f, 1.0f,
-		0.0f, 1.0f,
+		0.0f, 0.1f,
 		0.0f, 0.0f, 0.0f,
 		0.3f, 0.2f, 0.1f);
-	PointLightCount++;
+	//PointLightCount++;
 	PointLights[1] = PointLight(0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f,
+		0.0f, 0.1f,
 		-4.0f, 2.0f, 0.0f,
 		0.3f, 0.1f, 0.1f);
-	PointLightCount++;
+	//PointLightCount++;
+
+	unsigned int SpotLightCount = 0;
+	SpotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
+		0.0f, 2.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		20.0f);
+	SpotLightCount++;
+	SpotLights[1] = SpotLight(1.0f, 1.0f, 1.0f,
+		0.0f, 1.0f,
+		0.0f, -1.5f, 0.0f,
+		-100.0f, -1.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		20.0f);
+	SpotLightCount++;
 
 	GLuint
 		UniformProjection = { },
@@ -202,8 +220,13 @@ int main()
 		UniformSpecularIntensity = ShaderList[0].GetSpecularIntensityLocation();
 		UniformShininess = ShaderList[0].GetShininessLocation();
 
+		glm::vec3 LowerLight = camera.GetCameraPosition();
+		LowerLight.y -= 0.3f;
+		SpotLights[0].SetFlash(LowerLight, camera.GetCameraDirection());
+
 		ShaderList[0].SetDirectionalLight(&MainLight);
 		ShaderList[0].SetPointLights(PointLights, PointLightCount);
+		ShaderList[0].SetSpotLights(SpotLights, SpotLightCount);
 
 		glUniformMatrix4fv(UniformProjection, 1, GL_FALSE, glm::value_ptr(Projection));
 		glUniformMatrix4fv(UniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix()));
@@ -232,7 +255,7 @@ int main()
 		Model = glm::translate(Model, glm::vec3(0.0f, -2.0f, 0.0f));
 		//model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
 		glUniformMatrix4fv(UniformModel, 1, GL_FALSE, glm::value_ptr(Model));
-		PlainTexture.UseTexture();
+		DirtTexture.UseTexture();
 		ShinyMaterial.UseMaterial(UniformSpecularIntensity, UniformShininess);
 		MeshList[2]->RenderMesh();
 
