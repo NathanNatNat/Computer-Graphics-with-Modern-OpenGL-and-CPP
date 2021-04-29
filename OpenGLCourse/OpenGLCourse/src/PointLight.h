@@ -7,8 +7,7 @@
 #include <vector>
 #include "OmniShadowMap.h"
 
-class PointLight :
-	public Light
+class PointLight : public Light
 {
 public:
 	PointLight();
@@ -32,7 +31,9 @@ public:
 protected:
 	glm::vec3 Position{ };
 
-	GLfloat Constant{ }, Linear{ }, Exponent{ };
-
-	GLfloat FarPlane{ };
+	GLfloat 
+		Constant{ },
+		Linear{ },
+		Exponent{ },
+		FarPlane{ };
 };

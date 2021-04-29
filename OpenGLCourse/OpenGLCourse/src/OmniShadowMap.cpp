@@ -6,9 +6,10 @@
 
 OmniShadowMap::OmniShadowMap() : ShadowMap() { }
 
-bool OmniShadowMap::Init(unsigned int width, unsigned int height)
+bool OmniShadowMap::Init(GLuint width, GLuint height)
 {
-	ShadowWidth = width; ShadowHeight = height;
+	ShadowWidth = { width };
+	ShadowHeight = { height };
 
 	glGenFramebuffers(1, &FBO);
 
@@ -32,7 +33,7 @@ bool OmniShadowMap::Init(unsigned int width, unsigned int height)
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 
-	GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	GLenum Status = { glCheckFramebufferStatus(GL_FRAMEBUFFER) };
 
 	if (Status != GL_FRAMEBUFFER_COMPLETE)
 	{

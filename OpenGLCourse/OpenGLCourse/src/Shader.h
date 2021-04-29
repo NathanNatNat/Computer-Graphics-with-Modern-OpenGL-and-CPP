@@ -56,57 +56,73 @@ public:
 	~Shader();
 
 private:
-	int pointLightCount{ };
-	int spotLightCount{ };
+	GLint
+		PointLightCount{ },
+		SpotLightCount{ };
 
-	GLuint shaderID{ }, UniformProjection{ }, UniformModel{ }, UniformView{ }, UniformEyePosition{ },
-		UniformSpecularIntensity{ }, UniformShininess{ },
-		UniformTexture{ }, UniformDirectionalShadowMap{ },
+	GLuint
+		ShaderID{ },
+		UniformProjection{ },
+		UniformModel{ },
+		UniformView{ },
+		UniformEyePosition{ },
+		UniformSpecularIntensity{ },
+		UniformShininess{ },
+		UniformTexture{ },
+		UniformDirectionalShadowMap{ },
 		UniformDirectionalLightTransform{ },
-		UniformOmniLightPos{ }, UniformFarPlane{ };
-	
-	GLuint UniformLightMatrices[6]{ };
+		UniformOmniLightPos{ },
+		UniformFarPlane{ },
+		UniformLightMatrices[6]{ };
 
-	struct {
-		GLuint UniformColour{ };
-		GLuint UniformAmbientIntensity{ };
-		GLuint UniformDiffuseIntensity{ };
+	struct
+	{
+		GLuint
+			UniformColour{ },
+			UniformAmbientIntensity{ },
+			UniformDiffuseIntensity{ },
+			UniformDirection{ };
 
-		GLuint UniformDirection{ };
 	} UniformDirectionalLight{ };
 
 	GLuint UniformPointLightCount{ };
 
-	struct {
-		GLuint UniformColour{ };
-		GLuint UniformAmbientIntensity{ };
-		GLuint UniformDiffuseIntensity{ };
+	struct
+	{
+		GLuint
+			UniformColour{ },
+			UniformAmbientIntensity{ },
+			UniformDiffuseIntensity{ },
+			UniformPosition{ },
+			UniformConstant{ },
+			UniformLinear{ },
+			UniformExponent{ };
 
-		GLuint UniformPosition{ };
-		GLuint UniformConstant{ };
-		GLuint UniformLinear{ };
-		GLuint UniformExponent{ };
 	} UniformPointLight[MAX_POINT_LIGHTS]{ };
 
 	GLuint UniformSpotLightCount{ };
 
-	struct {
-		GLuint UniformColour{ };
-		GLuint UniformAmbientIntensity{ };
-		GLuint UniformDiffuseIntensity{ };
+	struct
+	{
+		GLuint 
+			UniformColour{ },
+			UniformAmbientIntensity{ },
+			UniformDiffuseIntensity{ },
+			UniformPosition{ },
+			UniformConstant{ },
+			UniformLinear{ },
+			UniformExponent{ },
+			UniformDirection{ },
+			UniformEdge{ };
 
-		GLuint UniformPosition{ };
-		GLuint UniformConstant{ };
-		GLuint UniformLinear{ };
-		GLuint UniformExponent{ };
-
-		GLuint UniformDirection{ };
-		GLuint UniformEdge{ };
 	} UniformSpotLight[MAX_SPOT_LIGHTS]{ };
 
-	struct {
-		GLuint shadowMap{ };
-		GLuint farPlane{ };
+	struct
+	{
+		GLuint
+			shadowMap{ },
+			FarPlane{ };
+
 	} UniformOmniShadowMap[MAX_POINT_LIGHTS + MAX_SPOT_LIGHTS]{ };
 
 	void CompileShader(const char* vertexCode, const char* fragmentCode);

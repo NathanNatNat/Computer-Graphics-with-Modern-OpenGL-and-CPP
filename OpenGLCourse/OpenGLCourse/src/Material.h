@@ -16,6 +16,7 @@ public:
 	~Material();
 
 private: 
-	GLfloat SpecularIntensity{ };
-	GLfloat Shininess{ };
+	GLfloat
+		SpecularIntensity{ },
+		Shininess{ };
 };

@@ -6,13 +6,13 @@
 
 Mesh::Mesh()
 {
-	VAO = 0;
-	VBO = 0;
-	IBO = 0;
-	IndexCount = 0;
+	VAO = { };
+	VBO = { };
+	IBO = { };
+	IndexCount = { };
 }
 
-void Mesh::CreateMesh(GLfloat *vertices, unsigned int *indices, size_t numOfVertices, size_t numOfIndices)
+void Mesh::CreateMesh(const GLfloat *vertices, const GLuint *indices, size_t numOfVertices, size_t numOfIndices)
 {
 	IndexCount = { static_cast<GLsizei>(numOfIndices) };
 
@@ -54,22 +54,22 @@ void Mesh::ClearMesh()
 	if (IBO != 0)
 	{
 		glDeleteBuffers(1, &IBO);
-		IBO = 0;
+		IBO = { };
 	}
 
 	if (VBO != 0)
 	{
 		glDeleteBuffers(1, &VBO);
-		VBO = 0;
+		VBO = { };
 	}
 
 	if (VAO != 0)
 	{
 		glDeleteVertexArrays(1, &VAO);
-		VAO = 0;
+		VAO = { };
 	}
 
-	IndexCount = 0;
+	IndexCount = { };
 }
 
 Mesh::~Mesh()

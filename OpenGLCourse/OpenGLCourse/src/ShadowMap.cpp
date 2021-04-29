@@ -4,17 +4,16 @@
 
 #include "ShadowMap.h"
 
-
-
 ShadowMap::ShadowMap()
 {
-	FBO = 0;
-	shadowMap = 0;
+	FBO = { };
+	shadowMap = { };
 }
 
-bool ShadowMap::Init(unsigned int width, unsigned int height)
+bool ShadowMap::Init(GLuint width, GLuint height)
 {
-	ShadowWidth = width; ShadowHeight = height;
+	ShadowWidth = { width };
+	ShadowHeight = { height };
 
 	glGenFramebuffers(1, &FBO);
 
@@ -34,7 +33,7 @@ bool ShadowMap::Init(unsigned int width, unsigned int height)
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 
-	GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	GLenum Status = { glCheckFramebufferStatus(GL_FRAMEBUFFER) };
 
 	if (Status != GL_FRAMEBUFFER_COMPLETE)
 	{

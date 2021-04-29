@@ -26,15 +26,15 @@
 #include "Skybox.h"
 
 GLuint 
-	UniformProjection = { 0 },
-	UniformModel = { 0 },
-	UniformView = { 0 },
-	UniformEyePosition = { 0 },
-	UniformSpecularIntensity = { 0 },
-	UniformShininess = { 0 },
-	UniformDirectionalLightTransform = { 0 },
-	UniformOmniLightPos = { 0 },
-	UniformFarPlane = { 0 };
+	UniformProjection{ },
+	UniformModel{ },
+	UniformView{ },
+	UniformEyePosition{ },
+	UniformSpecularIntensity{ },
+	UniformShininess{ },
+	UniformDirectionalLightTransform{ },
+	UniformOmniLightPos{ },
+	UniformFarPlane{ };
 
 Window MainWindow{ };
 
@@ -67,7 +67,7 @@ SpotLight SpotLights[MAX_SPOT_LIGHTS]{ };
 
 Skybox skybox{ };
 
-unsigned int 
+GLuint
 	PointLightCount = { 0 },
 	SpotLightCount = { 0 };
 
@@ -83,9 +83,9 @@ static const char* vShader = { "Shaders/shader_vert.glsl" };
 // Fragment Shader
 static const char* fShader = { "Shaders/shader_frag.glsl" };
 
-void CalcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloat * vertices, unsigned int verticeCount, unsigned int vLength, unsigned int normalOffset)
+void CalcAverageNormals(const GLuint * indices, GLuint indiceCount, GLfloat * vertices, GLuint verticeCount, GLuint vLength, GLuint normalOffset)
 {
-	for (size_t i = 0; i < indiceCount; i += 3)
+	for (GLuint i = 0; i < indiceCount; i += 3)
 	{
 		unsigned int 
 			In0 = indices[i] * vLength,
@@ -114,7 +114,7 @@ void CalcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloa
 
 void CreateObjects() 
 {
-	unsigned int Indices[] = 
+	GLuint Indices[] = 
 	{		
 		0, 3, 1,
 		1, 3, 2,
@@ -131,7 +131,7 @@ void CreateObjects()
 		 0.0f,  1.0f,  0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f
 	};
 
-	unsigned int FloorIndices[] = 
+	GLuint FloorIndices[] = 
 	{
 		0, 2, 1,
 		1, 2, 3
@@ -222,7 +222,8 @@ void DirectionalShadowMapPass(DirectionalLight* light)
 {
 	DirectionalShadowShader.UseShader();
 
-	glViewport(0, 0, light->GetShadowMap()->GetShadowWidth(), light->GetShadowMap()->GetShadowHeight());
+	ShadowMap* LightShadowMap{ light->GetShadowMap() };
+	glViewport(0, 0, LightShadowMap->GetShadowWidth(), LightShadowMap->GetShadowHeight());
 
 	light->GetShadowMap()->Write();
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -241,16 +242,18 @@ void OmniShadowMapPass(PointLight* light)
 {
 	OmniShadowShader.UseShader();
 
-	glViewport(0, 0, light->GetShadowMap()->GetShadowWidth(), light->GetShadowMap()->GetShadowHeight());
+	ShadowMap* LightShadowMap{ light->GetShadowMap() };
+	glViewport(0, 0, LightShadowMap->GetShadowWidth(), LightShadowMap->GetShadowHeight());
 
-	light->GetShadowMap()->Write();
+	LightShadowMap->Write();
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	UniformModel = { OmniShadowShader.GetModelLocation() };
 	UniformOmniLightPos = { OmniShadowShader.GetOmniLightPosLocation() };
 	UniformFarPlane = { OmniShadowShader.GetFarPlaneLocation() };
 
-	glUniform3f(UniformOmniLightPos, light->GetPosition().x, light->GetPosition().y, light->GetPosition().z);
+	glm::vec3 LightPos{ light->GetPosition() };
+	glUniform3f(UniformOmniLightPos, LightPos.x, LightPos.y, LightPos.z);
 	glUniform1f(UniformFarPlane, light->GetFarPlane());
 	OmniShadowShader.SetLightMatrices(light->CalculateLightTransform());
 
@@ -282,7 +285,8 @@ void RenderPass(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 
 	glUniformMatrix4fv(UniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 	glUniformMatrix4fv(UniformView, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-	glUniform3f(UniformEyePosition, camera.GetCameraPosition().x, camera.GetCameraPosition().y, camera.GetCameraPosition().z);
+	glm::vec3 CameraPos{ camera.GetCameraPosition() };
+	glUniform3f(UniformEyePosition, CameraPos.x, CameraPos.y, CameraPos.z);
 
 	ShaderList[0].SetDirectionalLight(&MainLight);
 	ShaderList[0].SetPointLights(PointLights, PointLightCount, 3, 0);
@@ -347,6 +351,7 @@ int main()
 	SpotLightCount++;
 
 	std::vector<std::string> SkyboxFaces{ };
+	SkyboxFaces.reserve(6);
 	SkyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
 	SkyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
 	SkyboxFaces.push_back("Textures/Skybox/cupertin-lake_up.tga");
@@ -356,15 +361,14 @@ int main()
 
 	skybox = { Skybox(SkyboxFaces) };
 
-	GLuint 
-		UniformProjection = { 0 },
-		UniformModel = { 0 },
-		UniformView = { 0 },
-		UniformEyePosition = { 0 },
-		UniformSpecularIntensity = { 0 },
-		UniformShininess = { 0 };
+	UniformProjection = { };
+	UniformModel = { };
+	UniformView = { };
+	UniformEyePosition = { };
+	UniformSpecularIntensity = { };
+	UniformShininess = { };
 
-	glm::mat4 Projection = { glm::perspective(glm::radians(60.0f), (GLfloat)MainWindow.GetBufferWidth() / MainWindow.GetBufferHeight(), 0.1f, 100.0f) };
+	glm::mat4 Projection = { glm::perspective(glm::radians(60.0f), static_cast<GLfloat>(MainWindow.GetBufferWidth()) / MainWindow.GetBufferHeight(), 0.1f, 100.0f) };
 
 	// Loop until window closed
 	while (!MainWindow.GetShouldClose())
@@ -382,7 +386,7 @@ int main()
 		if (MainWindow.GetKeys()[GLFW_KEY_L])
 		{
 			SpotLights[0].Toggle();
-			MainWindow.GetKeys()[GLFW_KEY_L] = false;
+			MainWindow.GetKeys()[GLFW_KEY_L] = { false };
 		}
 
 		DirectionalShadowMapPass(&MainLight);

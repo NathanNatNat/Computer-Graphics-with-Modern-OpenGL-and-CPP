@@ -6,14 +6,14 @@
 
 Material::Material()
 {
-	SpecularIntensity = 0.0f;
-	Shininess = 0.0f;
+	SpecularIntensity = { };
+	Shininess = { };
 }
 
 Material::Material(GLfloat sIntensity, GLfloat shine)
 {
-	SpecularIntensity = sIntensity;
-	Shininess = shine;
+	SpecularIntensity = { sIntensity };
+	Shininess = { shine };
 }
 
 void Material::UseMaterial(GLuint specularIntensityLocation, GLuint shininessLocation)

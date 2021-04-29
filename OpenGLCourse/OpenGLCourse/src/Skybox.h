@@ -28,6 +28,8 @@ private:
 	Mesh* SkyMesh{ };
 	Shader* SkyShader{ };
 
-	GLuint TextureID{ };
-	GLuint UniformProjection{ }, UniformView{ };
+	GLuint 
+		TextureID{ },
+		UniformProjection{ },
+		UniformView{ };
 };

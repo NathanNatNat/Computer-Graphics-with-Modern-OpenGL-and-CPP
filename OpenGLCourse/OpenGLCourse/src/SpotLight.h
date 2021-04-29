@@ -33,7 +33,9 @@ public:
 private:
 	glm::vec3 Direction{ };
 
-	GLfloat Edge{ }, ProcEdge{ };
+	GLfloat 
+		Edge{ },
+		ProcEdge{ };
 
 	bool IsOn{ };
 };

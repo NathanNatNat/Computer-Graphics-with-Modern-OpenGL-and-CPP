@@ -6,10 +6,10 @@
 
 PointLight::PointLight() : Light()
 {
-	Position = glm::vec3(0.0f, 0.0f, 0.0f);
-	Constant = 1.0f;
-	Linear = 0.0f;
-	Exponent = 0.0f;
+	Position = { glm::vec3(0.0f, 0.0f, 0.0f) };
+	Constant = { 1.0f };
+	Linear = { };
+	Exponent = { };
 }
 
 PointLight::PointLight(GLuint shadowWidth, GLuint shadowHeight,
@@ -19,17 +19,17 @@ PointLight::PointLight(GLuint shadowWidth, GLuint shadowHeight,
 						GLfloat xPos, GLfloat yPos, GLfloat zPos, 
 						GLfloat con, GLfloat lin, GLfloat exp) : Light(shadowWidth, shadowHeight, red, green, blue, aIntensity, dIntensity)
 {
-	Position = glm::vec3(xPos, yPos, zPos);
-	Constant = con;
-	Linear = lin;
-	Exponent = exp;
+	Position = { glm::vec3(xPos, yPos, zPos) };
+	Constant = { con };
+	Linear = { lin };
+	Exponent = { exp };
 
-	FarPlane = far;
+	FarPlane = { far };
 
-	float aspect = (float)shadowWidth / (float)shadowHeight;
-	LightProj = glm::perspective(glm::radians(90.0f), aspect, near, far);
+	float Aspect = { static_cast<float>(shadowWidth) / static_cast<float>(shadowHeight) };
+	LightProj = { glm::perspective(glm::radians(90.0f), Aspect, near, far) };
 
-	shadowMap = new OmniShadowMap();
+	shadowMap = { new OmniShadowMap() };
 	shadowMap->Init(shadowWidth, shadowHeight);
 }
 
@@ -49,7 +49,8 @@ void PointLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourL
 
 std::vector<glm::mat4> PointLight::CalculateLightTransform()
 {
-	std::vector<glm::mat4> LightMatrices;
+	std::vector<glm::mat4> LightMatrices{ };
+	LightMatrices.reserve(6);
 	//+x, -x
 	LightMatrices.push_back(LightProj * glm::lookAt(Position, Position + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
 	LightMatrices.push_back(LightProj * glm::lookAt(Position, Position + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));

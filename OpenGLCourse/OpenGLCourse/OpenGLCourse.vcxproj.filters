@@ -37,14 +37,14 @@
     <ClCompile Include="src\Model.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ShadowMap.cpp">
+    <ClCompile Include="src\Skybox.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\OmniShadowMap.cpp">
-      <Filter>src</Filter>
+      <Filter>src\Shadows</Filter>
     </ClCompile>
-    <ClCompile Include="src\Skybox.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\ShadowMap.cpp">
+      <Filter>src\Shadows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,14 +84,14 @@
     <ClInclude Include="src\Model.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\ShadowMap.h">
+    <ClInclude Include="src\Skybox.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\OmniShadowMap.h">
-      <Filter>src</Filter>
+      <Filter>src\Shadows</Filter>
     </ClInclude>
-    <ClInclude Include="src\Skybox.h">
-      <Filter>src</Filter>
+    <ClInclude Include="src\ShadowMap.h">
+      <Filter>src\Shadows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +100,9 @@
     </Filter>
     <Filter Include="src\Lights">
       <UniqueIdentifier>{1ed1414a-2d06-4be7-814d-f90000670a7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Shadows">
+      <UniqueIdentifier>{b39cbea7-4e50-448d-93ed-50d274cb66da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

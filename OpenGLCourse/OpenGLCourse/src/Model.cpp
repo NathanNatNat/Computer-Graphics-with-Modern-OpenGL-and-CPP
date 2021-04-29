@@ -10,7 +10,7 @@ void Model::RenderModel()
 {
 	for (size_t i = 0; i < MeshList.size(); i++)
 	{
-		unsigned int MaterialIndex = MeshToTex[i];
+		GLuint MaterialIndex = { MeshToTex[i] };
 
 		if (MaterialIndex < TextureList.size() && TextureList[MaterialIndex])
 		{
@@ -23,8 +23,8 @@ void Model::RenderModel()
 
 void Model::LoadModel(const std::string & fileName)
 {
-	Assimp::Importer importer;
-	const aiScene *scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
+	Assimp::Importer importer{ };
+	const aiScene* scene = { importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices) };
 
 	if (!scene)
 	{
@@ -39,12 +39,12 @@ void Model::LoadModel(const std::string & fileName)
 
 void Model::LoadNode(aiNode * node, const aiScene * scene)
 {
-	for (size_t i = 0; i < node->mNumMeshes; i++)
+	for (GLuint i = 0; i < node->mNumMeshes; i++)
 	{
 		LoadMesh(scene->mMeshes[node->mMeshes[i]], scene);
 	}
 
-	for (size_t i = 0; i < node->mNumChildren; i++)
+	for (GLuint i = 0; i < node->mNumChildren; i++)
 	{
 		LoadNode(node->mChildren[i], scene);
 	}
@@ -52,34 +52,34 @@ void Model::LoadNode(aiNode * node, const aiScene * scene)
 
 void Model::LoadMesh(aiMesh * mesh, const aiScene * scene)
 {
-	std::vector<GLfloat> vertices;
-	std::vector<unsigned int> indices;
+	std::vector<GLfloat> Vertices{ };
+	std::vector<GLuint> Indices{ };
 
-	for (size_t i = 0; i < mesh->mNumVertices; i++)
+	for (GLuint i = 0; i < mesh->mNumVertices; i++)
 	{
-		vertices.insert(vertices.end(), { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z });
+		Vertices.insert(Vertices.end(), { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z });
 		if (mesh->mTextureCoords[0])
 		{
-			vertices.insert(vertices.end(), { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y });
+			Vertices.insert(Vertices.end(), { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y });
 		}
 		else {
-			vertices.insert(vertices.end(), { 0.0f, 0.0f });
+			Vertices.insert(Vertices.end(), { 0.0f, 0.0f });
 		}
-		vertices.insert(vertices.end(), { -mesh->mNormals[i].x, -mesh->mNormals[i].y, -mesh->mNormals[i].z });
+		Vertices.insert(Vertices.end(), { -mesh->mNormals[i].x, -mesh->mNormals[i].y, -mesh->mNormals[i].z });
 	}
 
-	for (size_t i = 0; i < mesh->mNumFaces; i++)
+	for (GLuint i = 0; i < mesh->mNumFaces; i++)
 	{
-		aiFace face = mesh->mFaces[i];
-		for (size_t j = 0; j < face.mNumIndices; j++)
+		aiFace Face = { mesh->mFaces[i] };
+		for (GLuint j = 0; j < Face.mNumIndices; j++)
 		{
-			indices.push_back(face.mIndices[j]);
+			Indices.push_back(Face.mIndices[j]);
 		}
 	}
 
-	Mesh* newMesh = new Mesh();
-	newMesh->CreateMesh(&vertices[0], &indices[0], vertices.size(), indices.size());
-	MeshList.push_back(newMesh);
+	Mesh* NewMesh = { new Mesh() };
+	NewMesh->CreateMesh(&Vertices[0], &Indices[0], Vertices.size(), Indices.size());
+	MeshList.push_back(NewMesh);
 	MeshToTex.push_back(mesh->mMaterialIndex);
 }
 
@@ -87,36 +87,36 @@ void Model::LoadMaterials(const aiScene * scene)
 {
 	TextureList.resize(scene->mNumMaterials);
 	
-	for (size_t i = 0; i < scene->mNumMaterials; i++)
+	for (GLuint i = 0; i < scene->mNumMaterials; i++)
 	{
-		aiMaterial* material = scene->mMaterials[i];
+		aiMaterial* Material = { scene->mMaterials[i] };
 
-		TextureList[i] = nullptr;
+		TextureList[i] = { nullptr };
 
-		if (material->GetTextureCount(aiTextureType_DIFFUSE))
+		if (Material->GetTextureCount(aiTextureType_DIFFUSE))
 		{
-			aiString path;
-			if (material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
+			aiString Path{ };
+			if (Material->GetTexture(aiTextureType_DIFFUSE, 0, &Path) == AI_SUCCESS)
 			{
-				size_t idx = std::string(path.data).rfind("\\");
-				std::string filename = std::string(path.data).substr(idx + 1);
+				size_t Idx = { std::string(Path.data).rfind("\\") };
+				std::string Filename = { std::string(Path.data).substr(Idx + 1) };
 
-				std::string texPath = std::string("Textures/") + filename;
+				std::string TexPath = { std::string("Textures/") + Filename };
 
-				TextureList[i] = new Texture(texPath.c_str());
+				TextureList[i] = { new Texture(TexPath.c_str()) };
 
 				if (!TextureList[i]->LoadTexture())
 				{
-					printf("Failed to load texture at: %s\n", texPath);
+					printf("Failed to load texture at: %s\n", TexPath);
 					delete TextureList[i];
-					TextureList[i] = nullptr;
+					TextureList[i] = { nullptr };
 				}
 			}
 		}
 
 		if (!TextureList[i])
 		{
-			TextureList[i] = new Texture("Textures/plain.png");
+			TextureList[i] = { new Texture("Textures/plain.png") };
 			TextureList[i]->LoadTextureA();
 		}
 	}
@@ -129,7 +129,7 @@ void Model::ClearModel()
 		if (MeshList[i])
 		{
 			delete MeshList[i];
-			MeshList[i] = nullptr;
+			MeshList[i] = { nullptr };
 		}
 	}
 
@@ -138,7 +138,7 @@ void Model::ClearModel()
 		if (TextureList[i])
 		{
 			delete TextureList[i];
-			TextureList[i] = nullptr;
+			TextureList[i] = { nullptr };
 		}
 	}
 }

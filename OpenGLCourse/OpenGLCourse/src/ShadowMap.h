@@ -3,9 +3,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #pragma once
-
 #include <stdio.h>
-
 #include <GL\glew.h>
 
 class ShadowMap
@@ -13,7 +11,7 @@ class ShadowMap
 public:
 	ShadowMap();
 
-	virtual bool Init(unsigned int width, unsigned int height);
+	virtual bool Init(GLuint width, GLuint height);
 
 	virtual void Write();
 
@@ -24,6 +22,9 @@ public:
 
 	~ShadowMap();
 protected:
-	GLuint FBO{ }, shadowMap{ };
-	GLuint ShadowWidth{ }, ShadowHeight{ };
+	GLuint 
+		FBO{ },
+		shadowMap{ },
+		ShadowWidth{ },
+		ShadowHeight{ };
 };

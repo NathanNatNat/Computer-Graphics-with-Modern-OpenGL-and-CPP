@@ -14,7 +14,7 @@ public:
 
 	Window(GLint windowWidth, GLint windowHeight);
 
-	int Initialise();
+	GLint Initialise();
 
 	GLint GetBufferWidth() { return BufferWidth; }
 	GLint GetBufferHeight() { return BufferHeight; }
@@ -32,18 +32,23 @@ public:
 private:
 	GLFWwindow* MainWindow{ };
 
-	GLint Width{ }, Height{ };
-	GLint BufferWidth{ }, BufferHeight{ };
+	GLint 
+		Width{ },
+		Height{ },
+		BufferWidth{ },
+		BufferHeight{ };
 
-	bool Keys[1024];
+	bool Keys[1024]{ };
 
-	GLdouble LastX{ };
-	GLdouble LastY{ };
-	GLdouble XChange{ };
-	GLdouble YChange{ };
+	GLdouble 
+		LastX{ },
+		LastY{ },
+		XChange{ },
+		YChange{ };
+
 	bool MouseFirstMoved{ };
 
 	void CreateCallbacks();
-	static void HandleKeys(GLFWwindow* window, int key, int code, int action, int mode);
+	static void HandleKeys(GLFWwindow* window, GLint key, GLint code, GLint action, GLint mode);
 	static void HandleMouse(GLFWwindow* window, GLdouble xPos, GLdouble yPos);
 };

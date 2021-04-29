@@ -22,7 +22,11 @@ public:
 
 private:
 	GLuint TextureID{ };
-	int Width{ }, Height{ }, BitDepth{ };
 
-	const char* FileLocation{ };
+	GLint
+		Width{ },
+		Height{ },
+		BitDepth{ };
+
+	const GLchar* FileLocation{ };
 };

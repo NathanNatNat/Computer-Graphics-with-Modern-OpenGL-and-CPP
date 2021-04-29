@@ -30,5 +30,5 @@ private:
 
 	std::vector<Mesh*> MeshList{ };
 	std::vector<Texture*> TextureList{ };
-	std::vector<unsigned int> MeshToTex{ };
+	std::vector<GLuint> MeshToTex{ };
 };

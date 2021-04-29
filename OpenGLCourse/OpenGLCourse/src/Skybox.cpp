@@ -8,23 +8,23 @@ Skybox::Skybox() { }
 
 Skybox::Skybox(std::vector<std::string> faceLocations)
 {
-	// Shader Setup
-	SkyShader = new Shader();
+	SkyShader = { new Shader() };
 	SkyShader->CreateFromFiles("Shaders/skybox_vert.glsl", "Shaders/skybox_frag.glsl");
 
-	UniformProjection = SkyShader->GetProjectionLocation();
-	UniformView = SkyShader->GetViewLocation();
+	UniformProjection = { SkyShader->GetProjectionLocation() };
+	UniformView = { SkyShader->GetViewLocation() };
 
-
-	// Texture Setup
 	glGenTextures(1, &TextureID);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, TextureID);
 
-	int Width, Height, BitDepth;
+	GLint 
+		Width{ },
+		Height{ },
+		BitDepth{ };
 
 	for (GLenum i = 0; i < 6; i++)
 	{
-		unsigned char *TexData = stbi_load(faceLocations[i].c_str(), &Width, &Height, &BitDepth, 0);
+		GLubyte* TexData = { stbi_load(faceLocations[i].c_str(), &Width, &Height, &BitDepth, 0) };
 		if (!TexData)
 		{
 			printf("Failed to find: %s\n", faceLocations[i].c_str());
@@ -41,9 +41,8 @@ Skybox::Skybox(std::vector<std::string> faceLocations)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-
-	// Mesh Setup
-	unsigned int SkyboxIndices[] = {
+	GLuint SkyboxIndices[] = 
+	{
 		// front
 		0, 1, 2,
 		2, 1, 3,
@@ -64,7 +63,8 @@ Skybox::Skybox(std::vector<std::string> faceLocations)
 		3, 6, 7
 	};
 
-	float SkyboxVertices[] = {
+	GLfloat SkyboxVertices[] = 
+	{
 		-1.0f, 1.0f, -1.0f,		0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
 		-1.0f, -1.0f, -1.0f,	0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
 		1.0f, 1.0f, -1.0f,		0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
@@ -76,13 +76,13 @@ Skybox::Skybox(std::vector<std::string> faceLocations)
 		1.0f, -1.0f, 1.0f,		0.0f, 0.0f,		0.0f, 0.0f, 0.0f
 	};
 
-	SkyMesh = new Mesh();
+	SkyMesh = { new Mesh() };
 	SkyMesh->CreateMesh(SkyboxVertices, SkyboxIndices, 64, 36);
 }
 
 void Skybox::DrawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
-	viewMatrix = glm::mat4(glm::mat3(viewMatrix));
+	viewMatrix = { glm::mat4(glm::mat3(viewMatrix)) };
 
 	glDepthMask(GL_FALSE);
 
