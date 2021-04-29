@@ -43,6 +43,9 @@
     <ClCompile Include="src\OmniShadowMap.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Skybox.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h">
@@ -85,6 +88,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\OmniShadowMap.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Skybox.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

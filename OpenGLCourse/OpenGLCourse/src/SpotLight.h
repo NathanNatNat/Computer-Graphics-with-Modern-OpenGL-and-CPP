@@ -6,7 +6,7 @@ class SpotLight :
 public:
 	SpotLight();
 
-	SpotLight(GLfloat shadowWidth, GLfloat shadowHeight,
+	SpotLight(GLuint shadowWidth, GLuint shadowHeight,
 		GLfloat near, GLfloat far, 
 		GLfloat red, GLfloat green, GLfloat blue,
 		GLfloat aIntensity, GLfloat dIntensity,
@@ -27,10 +27,10 @@ public:
 	~SpotLight();
 
 private:
-	glm::vec3 direction;
+	glm::vec3 direction{ };
 
-	GLfloat edge, procEdge;
+	GLfloat edge{ }, procEdge{ };
 
-	bool isOn;
+	bool isOn{ };
 };
 

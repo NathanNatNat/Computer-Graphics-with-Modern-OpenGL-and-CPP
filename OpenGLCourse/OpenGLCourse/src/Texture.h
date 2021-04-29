@@ -2,7 +2,7 @@
 
 #include <GL\glew.h>
 
-#include "stb_image.h"
+#include "CommonValues.h"
 
 class Texture
 {
@@ -19,9 +19,9 @@ public:
 	~Texture();
 
 private:
-	GLuint textureID;
-	int width, height, bitDepth;
+	GLuint textureID{ };
+	int width{ }, height{ }, bitDepth{ };
 
-	const char* fileLocation;
+	const char* fileLocation{ };
 };
 

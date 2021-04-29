@@ -13,7 +13,7 @@ public:
 	~Material();
 
 private: 
-	GLfloat specularIntensity;
-	GLfloat shininess;
+	GLfloat specularIntensity{ };
+	GLfloat shininess{ };
 };
 

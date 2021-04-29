@@ -10,7 +10,7 @@ SpotLight::SpotLight() : PointLight()
 	isOn = true;
 }
 
-SpotLight::SpotLight(GLfloat shadowWidth, GLfloat shadowHeight,
+SpotLight::SpotLight(GLuint shadowWidth, GLuint shadowHeight,
 	GLfloat near, GLfloat far, 
 	GLfloat red, GLfloat green, GLfloat blue,
 	GLfloat aIntensity, GLfloat dIntensity, 

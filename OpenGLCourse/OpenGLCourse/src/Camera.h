@@ -24,17 +24,17 @@ public:
 	~Camera();
 
 private:
-	glm::vec3 position;
-	glm::vec3 front;
-	glm::vec3 up;
-	glm::vec3 right;
-	glm::vec3 worldUp;
+	glm::vec3 position{ };
+	glm::vec3 front{ };
+	glm::vec3 up{ };
+	glm::vec3 right{ };
+	glm::vec3 worldUp{ };
 
-	GLfloat yaw;
-	GLfloat pitch;
+	GLfloat yaw{ };
+	GLfloat pitch{ };
 
-	GLfloat moveSpeed;
-	GLfloat turnSpeed;
+	GLfloat moveSpeed{ };
+	GLfloat turnSpeed{ };
 
 	void update();
 };

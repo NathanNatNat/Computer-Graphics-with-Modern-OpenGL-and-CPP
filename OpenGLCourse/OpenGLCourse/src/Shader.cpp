@@ -2,12 +2,12 @@
 
 Shader::Shader()
 {
-	shaderID = 0;
-	uniformModel = 0;
-	uniformProjection = 0;
+	shaderID = { };
+	uniformModel = { };
+	uniformProjection = { };
 
-	pointLightCount = 0;
-	spotLightCount = 0;
+	pointLightCount = { };
+	spotLightCount = { };
 }
 
 void Shader::CreateFromString(const char* vertexCode, const char* fragmentCode)
@@ -37,24 +37,9 @@ void Shader::CreateFromFiles(const char* vertexLocation, const char* geometryLoc
 	CompileShader(vertexCode, geometryCode, fragmentCode);
 }
 
-void Shader::Validate()
-{
-	GLint result = 0;
-	GLchar eLog[1024] = { 0 };
-
-	glValidateProgram(shaderID);
-	glGetProgramiv(shaderID, GL_VALIDATE_STATUS, &result);
-	if (!result)
-	{
-		glGetProgramInfoLog(shaderID, sizeof(eLog), NULL, eLog);
-		printf("Error validating program: '%s'\n", eLog);
-		return;
-	}
-}
-
 std::string Shader::ReadFile(const char* fileLocation)
 {
-	std::string content;
+	std::string content{ };
 	std::ifstream fileStream(fileLocation, std::ios::in);
 
 	if (!fileStream.is_open()) {
@@ -62,7 +47,7 @@ std::string Shader::ReadFile(const char* fileLocation)
 		return "";
 	}
 
-	std::string line = "";
+	std::string line{ };
 	while (!fileStream.eof())
 	{
 		std::getline(fileStream, line);
@@ -106,9 +91,23 @@ void Shader::CompileShader(const char* vertexCode, const char* geometryCode, con
 	CompileProgram();
 }
 
-
-void Shader::CompileProgram()
+void Shader::Validate()
 {
+	GLint result = 0;
+	GLchar eLog[1024] = { 0 };
+
+	glValidateProgram(shaderID);
+	glGetProgramiv(shaderID, GL_VALIDATE_STATUS, &result);
+	if (!result)
+	{
+		glGetProgramInfoLog(shaderID, sizeof(eLog), NULL, eLog);
+		printf("Error validating program: '%s'\n", eLog);
+		return;
+	}
+}
+
+void Shader::CompileProgram() {
+
 	GLint result = 0;
 	GLchar eLog[1024] = { 0 };
 
@@ -134,7 +133,7 @@ void Shader::CompileProgram()
 
 	uniformPointLightCount = glGetUniformLocation(shaderID, "pointLightCount");
 
-	for (size_t i = 0; i < MAX_POINT_LIGHTS; i++)
+	for (int i = 0; i < MAX_POINT_LIGHTS; i++)
 	{
 		char locBuff[100] = { '\0' };
 
@@ -162,7 +161,7 @@ void Shader::CompileProgram()
 
 	uniformSpotLightCount = glGetUniformLocation(shaderID, "spotLightCount");
 
-	for (size_t i = 0; i < MAX_SPOT_LIGHTS; i++)
+	for (int i = 0; i < MAX_SPOT_LIGHTS; i++)
 	{
 		char locBuff[100] = { '\0' };
 
@@ -194,17 +193,6 @@ void Shader::CompileProgram()
 		uniformSpotLight[i].uniformEdge = glGetUniformLocation(shaderID, locBuff);
 	}
 
-	for (int i = 0; i < MAX_SPOT_LIGHTS + MAX_POINT_LIGHTS; i++)
-	{
-		char locBuff[100] = { '\0' };
-
-		snprintf(locBuff, sizeof(locBuff), "omniShadowMaps[%d].shadowMap", i);
-		uniformOmniShadowMap[i].uniformShadowMap = glGetUniformLocation(shaderID, locBuff);
-
-		snprintf(locBuff, sizeof(locBuff), "omniShadowMaps[%d].farPlane", i);
-		uniformOmniShadowMap[i].uniformFarPlane = glGetUniformLocation(shaderID, locBuff);
-	}
-
 	uniformDirectionalLightTransform = glGetUniformLocation(shaderID, "directionalLightTransform");
 	uniformTexture = glGetUniformLocation(shaderID, "theTexture");
 	uniformDirectionalShadowMap = glGetUniformLocation(shaderID, "directionalShadowMap");
@@ -212,12 +200,23 @@ void Shader::CompileProgram()
 	uniformOmniLightPos = glGetUniformLocation(shaderID, "lightPos");
 	uniformFarPlane = glGetUniformLocation(shaderID, "farPlane");
 
-	for (size_t i = 0; i < 6; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		char locBuff[100] = { '\0' };
 
 		snprintf(locBuff, sizeof(locBuff), "lightMatrices[%d]", i);
 		uniformLightMatrices[i] = glGetUniformLocation(shaderID, locBuff);
+	}
+
+	for (int i = 0; i < MAX_POINT_LIGHTS + MAX_SPOT_LIGHTS; i++)
+	{
+		char locBuff[100] = { '\0' };
+
+		snprintf(locBuff, sizeof(locBuff), "omniShadowMaps[%d].shadowMap", i);
+		uniformOmniShadowMap[i].shadowMap = glGetUniformLocation(shaderID, locBuff);
+
+		snprintf(locBuff, sizeof(locBuff), "omniShadowMaps[%d].farPlane", i);
+		uniformOmniShadowMap[i].farPlane = glGetUniformLocation(shaderID, locBuff);
 	}
 }
 
@@ -288,10 +287,9 @@ void Shader::SetPointLights(PointLight * pLight, unsigned int lightCount, unsign
 			uniformPointLight[i].uniformDiffuseIntensity, uniformPointLight[i].uniformPosition,
 			uniformPointLight[i].uniformConstant, uniformPointLight[i].uniformLinear, uniformPointLight[i].uniformExponent);
 
-
-		pLight[i].GetShadowMap()->Read(GL_TEXTURE0 + textureUnit + i);
-		glUniform1i(uniformOmniShadowMap[i + offset].uniformShadowMap, textureUnit + i);
-		glUniform1f(uniformOmniShadowMap[i + offset].uniformFarPlane, pLight[i].GetFarPlane());
+		pLight[i].getShadowMap()->Read(GL_TEXTURE0 + textureUnit + i);
+		glUniform1i(uniformOmniShadowMap[i + offset].shadowMap, textureUnit + i);
+		glUniform1f(uniformOmniShadowMap[i + offset].farPlane, pLight[i].GetFarPlane());
 	}
 }
 
@@ -301,17 +299,16 @@ void Shader::SetSpotLights(SpotLight * sLight, unsigned int lightCount, unsigned
 
 	glUniform1i(uniformSpotLightCount, lightCount);
 
-	for (size_t i = 0; i < lightCount; i++)
+	for (GLint i = 0; i < lightCount; i++)
 	{
 		sLight[i].UseLight(uniformSpotLight[i].uniformAmbientIntensity, uniformSpotLight[i].uniformColour,
 			uniformSpotLight[i].uniformDiffuseIntensity, uniformSpotLight[i].uniformPosition, uniformSpotLight[i].uniformDirection,
 			uniformSpotLight[i].uniformConstant, uniformSpotLight[i].uniformLinear, uniformSpotLight[i].uniformExponent,
 			uniformSpotLight[i].uniformEdge);
 
-
-		sLight[i].GetShadowMap()->Read(GL_TEXTURE0 + textureUnit + i);
-		glUniform1i(uniformOmniShadowMap[i + offset].uniformShadowMap, textureUnit + i);
-		glUniform1f(uniformOmniShadowMap[i + offset].uniformFarPlane, sLight[i].GetFarPlane());
+		sLight[i].getShadowMap()->Read(GL_TEXTURE0 + textureUnit + i);
+		glUniform1i(uniformOmniShadowMap[i + offset].shadowMap, textureUnit + i);
+		glUniform1f(uniformOmniShadowMap[i + offset].farPlane, sLight[i].GetFarPlane());
 	}
 }
 
@@ -330,7 +327,7 @@ void Shader::SetDirectionalLightTransform(glm::mat4 lTransform)
 	glUniformMatrix4fv(uniformDirectionalLightTransform, 1, GL_FALSE, glm::value_ptr(lTransform));
 }
 
-void Shader::SetOmniLightMatrices(std::vector<glm::mat4> lightMatrices)
+void Shader::SetLightMatrices(std::vector<glm::mat4> lightMatrices)
 {
 	for (size_t i = 0; i < 6; i++)
 	{
@@ -363,10 +360,7 @@ void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderT
 	const GLchar* theCode[1];
 	theCode[0] = shaderCode;
 
-	GLint codeLength[1];
-	codeLength[0] = strlen(shaderCode);
-
-	glShaderSource(theShader, 1, theCode, codeLength);
+	glShaderSource(theShader, 1, theCode, NULL);
 	glCompileShader(theShader);
 
 	GLint result = 0;

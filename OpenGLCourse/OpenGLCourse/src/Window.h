@@ -28,18 +28,18 @@ public:
 	~Window();
 
 private:
-	GLFWwindow* mainWindow;
+	GLFWwindow* mainWindow{ };
 
-	GLint width, height;
-	GLint bufferWidth, bufferHeight;
+	GLint width{ }, height{ };
+	GLint bufferWidth{ }, bufferHeight{ };
 
 	bool keys[1024];
 
-	GLfloat lastX;
-	GLfloat lastY;
-	GLfloat xChange;
-	GLfloat yChange;
-	bool mouseFirstMoved;
+	GLfloat lastX{ };
+	GLfloat lastY{ };
+	GLfloat xChange{ };
+	GLfloat yChange{ };
+	bool mouseFirstMoved{ };
 
 	void createCallbacks();
 	static void handleKeys(GLFWwindow* window, int key, int code, int action, int mode);
