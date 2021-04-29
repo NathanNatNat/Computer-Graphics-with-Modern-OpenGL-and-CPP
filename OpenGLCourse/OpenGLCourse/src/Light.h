@@ -10,11 +10,11 @@ class Light
 {
 public:
 	Light();
-	Light(GLuint shadowWidth, GLuint shadowHeight, 
-			GLfloat red, GLfloat green, GLfloat blue,
+	Light(GLfloat shadowWidth, GLfloat shadowHeight,
+			GLfloat red, GLfloat green, GLfloat blue, 
 			GLfloat aIntensity, GLfloat dIntensity);
 
-	ShadowMap* getShadowMap() { return shadowMap; }
+	ShadowMap* GetShadowMap() { return shadowMap; }
 
 	~Light();
 

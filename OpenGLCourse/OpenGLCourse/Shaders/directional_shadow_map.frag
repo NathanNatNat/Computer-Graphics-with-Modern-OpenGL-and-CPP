@@ -1,6 +1,2 @@
-#version 460
-
-void main()
-{
-
-}
+#version 330
+void main(){}
