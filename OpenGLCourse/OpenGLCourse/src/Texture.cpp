@@ -1,77 +1,75 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-
 #include "Texture.h"
+
+
 
 Texture::Texture()
 {
-	TextureID = { };
-	Width = { };
-	Height = { };
-	BitDepth = { };
-	FileLocation = { nullptr };
+	textureID = 0;
+	width = 0;
+	height = 0;
+	bitDepth = 0;
+	fileLocation = "";
 }
 
-Texture::Texture(const char* FileLoc)
+Texture::Texture(const char* fileLoc)
 {
-	TextureID = { };
-	Width = { };
-	Height = { };
-	BitDepth = { };
-	FileLocation = { FileLoc };
+	textureID = 0;
+	width = 0;
+	height = 0;
+	bitDepth = 0;
+	fileLocation = fileLoc;
 }
 
 bool Texture::LoadTexture()
 {
-	unsigned char* TexData = stbi_load(FileLocation, &Width, &Height, &BitDepth, 0);
-	if (!TexData)
+	unsigned char *texData = stbi_load(fileLocation, &width, &height, &bitDepth, 0);
+	if (!texData)
 	{
-		printf("Failed to find: %s\n", FileLocation);
+		printf("Failed to find: %s\n", fileLocation);
 		return false;
 	}
 
-	glGenTextures(1, &TextureID);
-	glBindTexture(GL_TEXTURE_2D, TextureID);
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, TexData);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	stbi_image_free(TexData);
+	stbi_image_free(texData);
 
 	return true;
 }
 
 bool Texture::LoadTextureA()
 {
-	unsigned char* TexData = stbi_load(FileLocation, &Width, &Height, &BitDepth, 0);
-	if (!TexData)
+	unsigned char *texData = stbi_load(fileLocation, &width, &height, &bitDepth, 0);
+	if (!texData)
 	{
-		printf("Failed to find: %s\n", FileLocation);
+		printf("Failed to find: %s\n", fileLocation);
 		return false;
 	}
 
-	glGenTextures(1, &TextureID);
-	glBindTexture(GL_TEXTURE_2D, TextureID);
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Width, Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, TexData);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	stbi_image_free(TexData);
+	stbi_image_free(texData);
 
 	return true;
 }
@@ -79,17 +77,17 @@ bool Texture::LoadTextureA()
 void Texture::UseTexture()
 {
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, TextureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
 void Texture::ClearTexture()
 {
-	glDeleteTextures(1, &TextureID);
-	TextureID = { };
-	Width = { };
-	Height = { };
-	BitDepth = { };
-	FileLocation = { nullptr };
+	glDeleteTextures(1, &textureID);
+	textureID = 0;
+	width = 0;
+	height = 0;
+	bitDepth = 0;
+	fileLocation = "";
 }
 
 

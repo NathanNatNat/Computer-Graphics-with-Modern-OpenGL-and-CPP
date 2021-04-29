@@ -1,7 +1,3 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-
 #pragma once
 #include "Light.h"
 
@@ -10,14 +6,19 @@ class DirectionalLight :
 {
 public:
 	DirectionalLight();
-	DirectionalLight(GLfloat red, GLfloat green, GLfloat blue,
-		GLfloat aIntensity, GLfloat dIntensity,
-		GLfloat xDir, GLfloat yDir, GLfloat zDir);
+	DirectionalLight(GLuint shadowWidth, GLuint shadowHeight, 
+					GLfloat red, GLfloat green, GLfloat blue,
+					GLfloat aIntensity, GLfloat dIntensity,
+					GLfloat xDir, GLfloat yDir, GLfloat zDir);
 
-	void UseLight(GLint ambientIntensityLocation, GLint ambientColourLocation, GLint diffuseIntensityLocation, GLint directionLocation);
+	void UseLight(GLfloat ambientIntensityLocation, GLfloat ambientColourLocation,
+		GLfloat diffuseIntensityLocation, GLfloat directionLocation);
+
+	glm::mat4 CalculateLightTransform();
 
 	~DirectionalLight();
 
 private:
-	glm::vec3 Direction;
+	glm::vec3 direction;
 };
+

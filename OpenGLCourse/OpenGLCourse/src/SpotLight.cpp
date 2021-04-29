@@ -1,54 +1,51 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-
 #include "SpotLight.h"
+
+
 
 SpotLight::SpotLight() : PointLight()
 {
-	Direction = { glm::vec3(0.0f, -1.0f, 0.0f) };
-	Edge = { };
-	ProcEdge = { cosf(glm::radians(Edge)) };
+	direction = glm::vec3(0.0f, -1.0f, 0.0f);
+	edge = 0.0f;
+	procEdge = cosf(glm::radians(edge));
 }
 
-SpotLight::SpotLight(GLfloat red, GLfloat green, GLfloat blue,
-	GLfloat aIntensity, GLfloat dIntensity,
-	GLfloat xPos, GLfloat yPos, GLfloat zPos,
-	GLfloat xDir, GLfloat yDir, GLfloat zDir,
-	GLfloat con, GLfloat lin, GLfloat exp,
+SpotLight::SpotLight(GLfloat red, GLfloat green, GLfloat blue, 
+	GLfloat aIntensity, GLfloat dIntensity, 
+	GLfloat xPos, GLfloat yPos, GLfloat zPos, 
+	GLfloat xDir, GLfloat yDir, GLfloat zDir, 
+	GLfloat con, GLfloat lin, GLfloat exp, 
 	GLfloat edg) : PointLight(red, green, blue, aIntensity, dIntensity, xPos, yPos, zPos, con, lin, exp)
 {
-	Direction = { glm::normalize(glm::vec3(xDir, yDir, zDir)) };
+	direction = glm::normalize(glm::vec3(xDir, yDir, zDir));
 
-	Edge = { edg };
-	ProcEdge = { cosf(glm::radians(Edge)) };
+	edge = edg;
+	procEdge = cosf(glm::radians(edge));
 }
 
-void SpotLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation,
-	GLuint diffuseIntensityLocation, GLuint positionLocation, GLuint directionLocation,
-	GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation,
+void SpotLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation, 
+	GLuint diffuseIntensityLocation, GLuint positionLocation, GLuint directionLocation, 
+	GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation, 
 	GLuint edgeLocation)
 {
-	glUniform3f(ambientColourLocation, Colour.x, Colour.y, Colour.z);
-	glUniform1f(ambientIntensityLocation, AmbientIntensity);
-	glUniform1f(diffuseIntensityLocation, DiffuseIntensity);
+	glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z);
+	glUniform1f(ambientIntensityLocation, ambientIntensity);
+	glUniform1f(diffuseIntensityLocation, diffuseIntensity);
 
-	glUniform3f(positionLocation, Position.x, Position.y, Position.z);
-	glUniform1f(constantLocation, Constant);
-	glUniform1f(linearLocation, Linear);
-	glUniform1f(exponentLocation, Exponent);
+	glUniform3f(positionLocation, position.x, position.y, position.z);
+	glUniform1f(constantLocation, constant);
+	glUniform1f(linearLocation, linear);
+	glUniform1f(exponentLocation, exponent);
 
-	glUniform3f(directionLocation, Direction.x, Direction.y, Direction.z);
-	glUniform1f(edgeLocation, ProcEdge);
+	glUniform3f(directionLocation, direction.x, direction.y, direction.z);
+	glUniform1f(edgeLocation, procEdge);
 }
 
 void SpotLight::SetFlash(glm::vec3 pos, glm::vec3 dir)
 {
-	Position = { pos };
-	Direction = { dir };
+	position = pos;
+	direction = dir;
 }
 
 SpotLight::~SpotLight()
 {
-
 }

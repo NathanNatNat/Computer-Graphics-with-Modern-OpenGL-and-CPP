@@ -1,11 +1,8 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-
 #pragma once
 #include "Light.h"
 
-class PointLight : public Light
+class PointLight :
+	public Light
 {
 public:
 	PointLight();
@@ -21,7 +18,8 @@ public:
 	~PointLight();
 
 protected:
-	glm::vec3 Position;
+	glm::vec3 position;
 
-	GLfloat Constant, Linear, Exponent;
+	GLfloat constant, linear, exponent;
 };
+

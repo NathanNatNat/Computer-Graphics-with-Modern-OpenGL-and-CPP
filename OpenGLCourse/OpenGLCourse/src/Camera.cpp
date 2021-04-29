@@ -1,100 +1,93 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-
 #include "Camera.h"
 
-Camera::Camera()
-{
+Camera::Camera() {}
 
+Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLfloat startPitch, GLfloat startMoveSpeed, GLfloat startTurnSpeed)
+{
+	position = startPosition;
+	worldUp = startUp;
+	yaw = startYaw;
+	pitch = startPitch;
+	front = glm::vec3(0.0f, 0.0f, -1.0f);
+
+	moveSpeed = startMoveSpeed;
+	turnSpeed = startTurnSpeed;
+
+	update();
 }
 
-Camera::Camera(glm::vec3 StartPosition, glm::vec3 StartUp, GLfloat StartYaw, GLfloat StartPitch, GLfloat StartMovementSpeed, GLfloat StartTurnSpeed)
+void Camera::keyControl(bool* keys, GLfloat deltaTime)
 {
-	Position = StartPosition;
-	WorldUp = StartUp;
-	Yaw = StartYaw;
-	Pitch = StartPitch;
-	Front = glm::vec3(0.0f, 0.0f, -1.0f);
-	MovementSpeed = StartMovementSpeed;
-	TurnSpeed = StartTurnSpeed;
+	GLfloat velocity = moveSpeed * deltaTime;
 
-	Update();
-}
-
-void Camera::KeyControl(const bool* Keys, GLfloat DeltaTime)
-{
-	GLfloat Velocity = MovementSpeed * DeltaTime;
-
-	if (Keys[GLFW_KEY_W])
+	if (keys[GLFW_KEY_W])
 	{
-		Position += Front * Velocity;
+		position += front * velocity;
 	}
 
-	if (Keys[GLFW_KEY_S])
+	if (keys[GLFW_KEY_S])
 	{
-		Position -= Front * Velocity;
+		position -= front * velocity;
 	}
 
-	if (Keys[GLFW_KEY_A])
+	if (keys[GLFW_KEY_A])
 	{
-		Position -= Right * Velocity;
+		position -= right * velocity;
 	}
 
-	if (Keys[GLFW_KEY_D])
+	if (keys[GLFW_KEY_D])
 	{
-		Position += Right * Velocity;
+		position += right * velocity;
 	}
 }
 
-void Camera::MouseControl(GLfloat XChange, GLfloat YChange)
+void Camera::mouseControl(GLfloat xChange, GLfloat yChange)
 {
-	XChange *= TurnSpeed;
-	YChange *= TurnSpeed;
+	xChange *= turnSpeed;
+	yChange *= turnSpeed;
 
-	Yaw += XChange;
-	Pitch += YChange;
+	yaw += xChange;
+	pitch += yChange;
 
-	if (Pitch > 89.0f)
+	if (pitch > 89.0f)
 	{
-		Pitch = 89.0f;
+		pitch = 89.0f;
 	}
 
-	if (Pitch < -89.0f)
+	if (pitch < -89.0f)
 	{
-		Pitch = -89.0f;
+		pitch = -89.0f;
 	}
 
-	Update();
+	update();
 }
 
-glm::mat4 Camera::CalculateViewMatrix()
+glm::mat4 Camera::calculateViewMatrix()
 {
-	return glm::lookAt(Position, Position + Front, Up);
+	return glm::lookAt(position, position + front, up);
 }
 
-glm::vec3 Camera::GetCameraPosition()
+glm::vec3 Camera::getCameraPosition()
 {
-	return Position;
+	return position;
 }
-
-glm::vec3 Camera::GetCameraDirection()
+glm::vec3 Camera::getCameraDirection()
 {
-	return glm::normalize(Front);
+	return glm::normalize(front);
 }
 
-void Camera::Update()
+void Camera::update()
 {
-	Front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	Front.y = sin(glm::radians(Pitch));
-	Front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	Front = glm::normalize(Front);
+	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	front.y = sin(glm::radians(pitch));
+	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	front = glm::normalize(front);
 
-	Right = glm::normalize(glm::cross(Front, WorldUp));
-	Up = glm::normalize(glm::cross(Right, Front));
+	right = glm::normalize(glm::cross(front, worldUp));
+	up = glm::normalize(glm::cross(right, front));
 }
+
 
 Camera::~Camera()
 {
-
 }

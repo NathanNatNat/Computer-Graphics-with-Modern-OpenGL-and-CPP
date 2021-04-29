@@ -1,33 +1,28 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-
 #include "Model.h"
 
 Model::Model()
 {
-
 }
 
 void Model::RenderModel()
 {
-	for (size_t i = 0; i < MeshList.size(); i++)
+	for (size_t i = 0; i < meshList.size(); i++)
 	{
-		unsigned int MaterialIndex = MeshToTex[i];
+		unsigned int materialIndex = meshToTex[i];
 
-		if (MaterialIndex < TextureList.size() && TextureList[MaterialIndex])
+		if (materialIndex < textureList.size() && textureList[materialIndex])
 		{
-			TextureList[MaterialIndex]->UseTexture();
+			textureList[materialIndex]->UseTexture();
 		}
 
-		MeshList[i]->RenderMesh();
+		meshList[i]->RenderMesh();
 	}
 }
 
-void Model::LoadModel(const std::string& fileName)
+void Model::LoadModel(const std::string & fileName)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
+	const aiScene *scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
 
 	if (!scene)
 	{
@@ -40,7 +35,7 @@ void Model::LoadModel(const std::string& fileName)
 	LoadMaterials(scene);
 }
 
-void Model::LoadNode(aiNode* node, const aiScene* scene)
+void Model::LoadNode(aiNode * node, const aiScene * scene)
 {
 	for (size_t i = 0; i < node->mNumMeshes; i++)
 	{
@@ -53,7 +48,7 @@ void Model::LoadNode(aiNode* node, const aiScene* scene)
 	}
 }
 
-void Model::LoadMesh(aiMesh* mesh, const aiScene* scene)
+void Model::LoadMesh(aiMesh * mesh, const aiScene * scene)
 {
 	std::vector<GLfloat> vertices;
 	std::vector<unsigned int> indices;
@@ -82,71 +77,70 @@ void Model::LoadMesh(aiMesh* mesh, const aiScene* scene)
 
 	Mesh* newMesh = new Mesh();
 	newMesh->CreateMesh(&vertices[0], &indices[0], vertices.size(), indices.size());
-	MeshList.push_back(newMesh);
-	MeshToTex.push_back(mesh->mMaterialIndex);
+	meshList.push_back(newMesh);
+	meshToTex.push_back(mesh->mMaterialIndex);
 }
 
-void Model::LoadMaterials(const aiScene* scene)
+void Model::LoadMaterials(const aiScene * scene)
 {
-	TextureList.resize(scene->mNumMaterials);
-
+	textureList.resize(scene->mNumMaterials);
+	
 	for (size_t i = 0; i < scene->mNumMaterials; i++)
 	{
-		aiMaterial* Material = scene->mMaterials[i];
+		aiMaterial* material = scene->mMaterials[i];
 
-		TextureList[i] = nullptr;
+		textureList[i] = nullptr;
 
-		if (Material->GetTextureCount(aiTextureType_DIFFUSE))
+		if (material->GetTextureCount(aiTextureType_DIFFUSE))
 		{
 			aiString path;
-			if (Material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
+			if (material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
 			{
 				int idx = std::string(path.data).rfind("\\");
 				std::string filename = std::string(path.data).substr(idx + 1);
 
-				std::string texPath = std::string("Textures/"+ filename);
+				std::string texPath = std::string("Textures/") + filename;
 
-				TextureList[i] = new Texture(texPath.c_str());
+				textureList[i] = new Texture(texPath.c_str());
 
-				if (!TextureList[i]->LoadTexture())
+				if (!textureList[i]->LoadTexture())
 				{
 					printf("Failed to load texture at: %s\n", texPath);
-					delete TextureList[i];
-					TextureList[i] = nullptr;
+					delete textureList[i];
+					textureList[i] = nullptr;
 				}
 			}
 		}
 
-		if (!TextureList[i])
+		if (!textureList[i])
 		{
-			TextureList[i] = new Texture("Textures/plain.png");
-			TextureList[i]->LoadTextureA();
+			textureList[i] = new Texture("Textures/plain.png");
+			textureList[i]->LoadTextureA();
 		}
 	}
 }
 
 void Model::ClearModel()
 {
-	for (size_t i = 0; i < MeshList.size(); i++)
+	for (size_t i = 0; i < meshList.size(); i++)
 	{
-		if (MeshList[i])
+		if (meshList[i])
 		{
-			delete MeshList[i];
-			MeshList[i] = nullptr;
+			delete meshList[i];
+			meshList[i] = nullptr;
 		}
 	}
 
-	for (size_t i = 0; i < TextureList.size(); i++)
+	for (size_t i = 0; i < textureList.size(); i++)
 	{
-		if (TextureList[i])
+		if (textureList[i])
 		{
-			delete TextureList[i];
-			TextureList[i] = nullptr;
+			delete textureList[i];
+			textureList[i] = nullptr;
 		}
 	}
 }
 
 Model::~Model()
 {
-
 }

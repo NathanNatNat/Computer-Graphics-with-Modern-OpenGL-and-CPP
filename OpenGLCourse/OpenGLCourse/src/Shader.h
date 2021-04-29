@@ -1,14 +1,18 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-
 #pragma once
+
 #include <stdio.h>
 #include <string>
 #include <iostream>
 #include <fstream>
+
 #include <GL\glew.h>
+
+#include <glm\glm.hpp>
+#include <glm\gtc\matrix_transform.hpp>
+#include <glm\gtc\type_ptr.hpp>
+
 #include "CommonValues.h"
+
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
@@ -18,10 +22,10 @@ class Shader
 public:
 	Shader();
 
-	void CreateFromString(const char* VertexCode, const char* FragmentCode);
-	void CreateFromFiles(const char* VertexLocation, const char* FragmentLocation);
+	void CreateFromString(const char* vertexCode, const char* fragmentCode);
+	void CreateFromFiles(const char* vertexLocation, const char* fragmentLocation);
 
-	std::string ReadFile(const char* FileLocation);
+	std::string ReadFile(const char* fileLocation);
 
 	GLuint GetProjectionLocation();
 	GLuint GetModelLocation();
@@ -34,9 +38,12 @@ public:
 	GLuint GetShininessLocation();
 	GLuint GetEyePositionLocation();
 
-	void SetDirectionalLight(DirectionalLight* dLight);
-	void SetPointLights(PointLight* pLight, unsigned int lightCount);
-	void SetSpotLights(SpotLight* sLight, unsigned int lightCount);
+	void SetDirectionalLight(DirectionalLight * dLight);
+	void SetPointLights(PointLight * pLight, unsigned int lightCount);
+	void SetSpotLights(SpotLight * sLight, unsigned int lightCount);
+	void SetTexture(GLuint textureUnit);
+	void SetDirectionalShadowMap(GLuint textureUnit);
+	void SetDirectionalLightTransform(glm::mat4 lTransform);
 
 	void UseShader();
 	void ClearShader();
@@ -44,60 +51,52 @@ public:
 	~Shader();
 
 private:
-	int PointLightCount{ },
-		SpotLightCount{ };
+	int pointLightCount;
+	int spotLightCount;
 
-	GLuint
-		ShaderID{ },
-		UniformProjection{ },
-		UniformModel{ },
-		UniformView{ },
-		UniformEyePosition{ },
-		UniformSpecularIntensity{ },
-		UniformShininess{ };
+	GLuint shaderID, uniformProjection, uniformModel, uniformView, uniformEyePosition,
+		uniformSpecularIntensity, uniformShininess, 
+		uniformTexture, uniformDirectionalShadowMap, 
+		uniformDirectionalLightTransform;
 
-	struct 
-	{
-		GLuint 
-			UniformColour{ },
-			UniformAmbientIntensity{ },
-			UniformDiffuseIntensity{ },
-			UniformDirection{ };
+	struct {
+		GLuint uniformColour;
+		GLuint uniformAmbientIntensity;
+		GLuint uniformDiffuseIntensity;
 
-	} UniformDirectionalLight{ };
+		GLuint uniformDirection;
+	} uniformDirectionalLight;
 
-	GLuint UniformPointLightCount{ };
+	GLuint uniformPointLightCount;
 
-	struct 
-	{
-		GLuint
-			UniformColour{ },
-			UniformAmbientIntensity{ },
-			UniformDiffuseIntensity{ },
-			UniformPosition{ },
-			UniformConstant{ },
-			UniformLinear{ },
-			UniformExponent{ };
+	struct {
+		GLuint uniformColour;
+		GLuint uniformAmbientIntensity;
+		GLuint uniformDiffuseIntensity;
 
-	} UniformPointLight[MAX_POINT_LIGHTS]{ };
+		GLuint uniformPosition;
+		GLuint uniformConstant;
+		GLuint uniformLinear;
+		GLuint uniformExponent;
+	} uniformPointLight[MAX_POINT_LIGHTS];
 
-	GLuint UniformSpotLightCount{ };
+	GLuint uniformSpotLightCount;
 
-	struct 
-	{
-		GLuint 
-			UniformColour{ },
-			UniformAmbientIntensity{ },
-			UniformDiffuseIntensity{ },
-			UniformPosition{ },
-			UniformConstant{ },
-			UniformLinear{ },
-			UniformExponent{ },
-			UniformDirection{ },
-			UniformEdge{ };
+	struct {
+		GLuint uniformColour;
+		GLuint uniformAmbientIntensity;
+		GLuint uniformDiffuseIntensity;
 
-	} UniformSpotLight[MAX_SPOT_LIGHTS]{ };
+		GLuint uniformPosition;
+		GLuint uniformConstant;
+		GLuint uniformLinear;
+		GLuint uniformExponent;
 
-	void CompileShader(const char* VertexCode, const char* FragmentCode);
-	void AddShader(GLuint TheProgram, const char* ShaderCode, GLenum ShaderType);
+		GLuint uniformDirection;
+		GLuint uniformEdge;
+	} uniformSpotLight[MAX_SPOT_LIGHTS];
+
+	void CompileShader(const char* vertexCode, const char* fragmentCode);
+	void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);
 };
+
