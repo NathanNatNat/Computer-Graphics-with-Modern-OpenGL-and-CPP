@@ -1,13 +1,15 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
 #include "SpotLight.h"
-
-
 
 SpotLight::SpotLight() : PointLight()
 {
-	direction = glm::vec3(0.0f, -1.0f, 0.0f);
-	edge = 0.0f;
-	procEdge = cosf(glm::radians(edge));
-	isOn = true;
+	Direction = glm::vec3(0.0f, -1.0f, 0.0f);
+	Edge = 0.0f;
+	ProcEdge = cosf(glm::radians(Edge));
+	IsOn = true;
 }
 
 SpotLight::SpotLight(GLuint shadowWidth, GLuint shadowHeight,
@@ -19,10 +21,10 @@ SpotLight::SpotLight(GLuint shadowWidth, GLuint shadowHeight,
 	GLfloat con, GLfloat lin, GLfloat exp, 
 	GLfloat edg) : PointLight(shadowWidth, shadowHeight, near, far, red, green, blue, aIntensity, dIntensity, xPos, yPos, zPos, con, lin, exp)
 {
-	direction = glm::normalize(glm::vec3(xDir, yDir, zDir));
+	Direction = glm::normalize(glm::vec3(xDir, yDir, zDir));
 
-	edge = edg;
-	procEdge = cosf(glm::radians(edge));
+	Edge = edg;
+	ProcEdge = cosf(glm::radians(Edge));
 }
 
 void SpotLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation, 
@@ -30,33 +32,31 @@ void SpotLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLo
 	GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation, 
 	GLuint edgeLocation)
 {
-	glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z);
+	glUniform3f(ambientColourLocation, Colour.x, Colour.y, Colour.z);
 
-	if (isOn)
+	if (IsOn)
 	{
-		glUniform1f(ambientIntensityLocation, ambientIntensity);
-		glUniform1f(diffuseIntensityLocation, diffuseIntensity);
+		glUniform1f(ambientIntensityLocation, AmbientIntensity);
+		glUniform1f(diffuseIntensityLocation, DiffuseIntensity);
 	}
 	else {
 		glUniform1f(ambientIntensityLocation, 0.0f);
 		glUniform1f(diffuseIntensityLocation, 0.0f);
 	}
 
-	glUniform3f(positionLocation, position.x, position.y, position.z);
-	glUniform1f(constantLocation, constant);
-	glUniform1f(linearLocation, linear);
-	glUniform1f(exponentLocation, exponent);
+	glUniform3f(positionLocation, Position.x, Position.y, Position.z);
+	glUniform1f(constantLocation, Constant);
+	glUniform1f(linearLocation, Linear);
+	glUniform1f(exponentLocation, Exponent);
 
-	glUniform3f(directionLocation, direction.x, direction.y, direction.z);
-	glUniform1f(edgeLocation, procEdge);
+	glUniform3f(directionLocation, Direction.x, Direction.y, Direction.z);
+	glUniform1f(edgeLocation, ProcEdge);
 }
 
 void SpotLight::SetFlash(glm::vec3 pos, glm::vec3 dir)
 {
-	position = pos;
-	direction = dir;
+	Position = pos;
+	Direction = dir;
 }
 
-SpotLight::~SpotLight()
-{
-}
+SpotLight::~SpotLight() { }

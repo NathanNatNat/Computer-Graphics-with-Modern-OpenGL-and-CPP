@@ -1,7 +1,11 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
 #pragma once
 #include "PointLight.h"
-class SpotLight :
-	public PointLight
+
+class SpotLight : public PointLight
 {
 public:
 	SpotLight();
@@ -22,15 +26,14 @@ public:
 
 	void SetFlash(glm::vec3 pos, glm::vec3 dir);
 
-	void Toggle() { isOn = !isOn; }
+	void Toggle() { IsOn = !IsOn; }
 
 	~SpotLight();
 
 private:
-	glm::vec3 direction{ };
+	glm::vec3 Direction{ };
 
-	GLfloat edge{ }, procEdge{ };
+	GLfloat Edge{ }, ProcEdge{ };
 
-	bool isOn{ };
+	bool IsOn{ };
 };
-

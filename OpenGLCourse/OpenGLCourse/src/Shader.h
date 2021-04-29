@@ -1,18 +1,17 @@
-#pragma once
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
+#pragma once
 #include <stdio.h>
 #include <string>
 #include <iostream>
 #include <fstream>
-
 #include <GL\glew.h>
-
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
-
 #include "CommonValues.h"
-
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
@@ -44,8 +43,8 @@ public:
 	GLuint GetFarPlaneLocation();
 
 	void SetDirectionalLight(DirectionalLight * dLight);
-	void SetPointLights(PointLight * pLight, unsigned int lightCount, unsigned int textureUnit, unsigned int offset);
-	void SetSpotLights(SpotLight * sLight, unsigned int lightCount, unsigned int textureUnit, unsigned int offset);
+	void SetPointLights(PointLight * pLight, int lightCount, unsigned int textureUnit, unsigned int offset);
+	void SetSpotLights(SpotLight * sLight, GLint lightCount, unsigned int textureUnit, unsigned int offset);
 	void SetTexture(GLuint textureUnit);
 	void SetDirectionalShadowMap(GLuint textureUnit);
 	void SetDirectionalLightTransform(glm::mat4 lTransform);
@@ -60,55 +59,55 @@ private:
 	int pointLightCount{ };
 	int spotLightCount{ };
 
-	GLuint shaderID{ }, uniformProjection{ }, uniformModel{ }, uniformView{ }, uniformEyePosition{ },
-		uniformSpecularIntensity{ }, uniformShininess{ },
-		uniformTexture{ }, uniformDirectionalShadowMap{ },
-		uniformDirectionalLightTransform{ },
-		uniformOmniLightPos{ }, uniformFarPlane{ };
+	GLuint shaderID{ }, UniformProjection{ }, UniformModel{ }, UniformView{ }, UniformEyePosition{ },
+		UniformSpecularIntensity{ }, UniformShininess{ },
+		UniformTexture{ }, UniformDirectionalShadowMap{ },
+		UniformDirectionalLightTransform{ },
+		UniformOmniLightPos{ }, UniformFarPlane{ };
 	
-	GLuint uniformLightMatrices[6]{ };
+	GLuint UniformLightMatrices[6]{ };
 
 	struct {
-		GLuint uniformColour{ };
-		GLuint uniformAmbientIntensity{ };
-		GLuint uniformDiffuseIntensity{ };
+		GLuint UniformColour{ };
+		GLuint UniformAmbientIntensity{ };
+		GLuint UniformDiffuseIntensity{ };
 
-		GLuint uniformDirection{ };
-	} uniformDirectionalLight{ };
+		GLuint UniformDirection{ };
+	} UniformDirectionalLight{ };
 
-	GLuint uniformPointLightCount{ };
-
-	struct {
-		GLuint uniformColour{ };
-		GLuint uniformAmbientIntensity{ };
-		GLuint uniformDiffuseIntensity{ };
-
-		GLuint uniformPosition{ };
-		GLuint uniformConstant{ };
-		GLuint uniformLinear{ };
-		GLuint uniformExponent{ };
-	} uniformPointLight[MAX_POINT_LIGHTS]{ };
-
-	GLuint uniformSpotLightCount{ };
+	GLuint UniformPointLightCount{ };
 
 	struct {
-		GLuint uniformColour{ };
-		GLuint uniformAmbientIntensity{ };
-		GLuint uniformDiffuseIntensity{ };
+		GLuint UniformColour{ };
+		GLuint UniformAmbientIntensity{ };
+		GLuint UniformDiffuseIntensity{ };
 
-		GLuint uniformPosition{ };
-		GLuint uniformConstant{ };
-		GLuint uniformLinear{ };
-		GLuint uniformExponent{ };
+		GLuint UniformPosition{ };
+		GLuint UniformConstant{ };
+		GLuint UniformLinear{ };
+		GLuint UniformExponent{ };
+	} UniformPointLight[MAX_POINT_LIGHTS]{ };
 
-		GLuint uniformDirection{ };
-		GLuint uniformEdge{ };
-	} uniformSpotLight[MAX_SPOT_LIGHTS]{ };
+	GLuint UniformSpotLightCount{ };
+
+	struct {
+		GLuint UniformColour{ };
+		GLuint UniformAmbientIntensity{ };
+		GLuint UniformDiffuseIntensity{ };
+
+		GLuint UniformPosition{ };
+		GLuint UniformConstant{ };
+		GLuint UniformLinear{ };
+		GLuint UniformExponent{ };
+
+		GLuint UniformDirection{ };
+		GLuint UniformEdge{ };
+	} UniformSpotLight[MAX_SPOT_LIGHTS]{ };
 
 	struct {
 		GLuint shadowMap{ };
 		GLuint farPlane{ };
-	} uniformOmniShadowMap[MAX_POINT_LIGHTS + MAX_SPOT_LIGHTS]{ };
+	} UniformOmniShadowMap[MAX_POINT_LIGHTS + MAX_SPOT_LIGHTS]{ };
 
 	void CompileShader(const char* vertexCode, const char* fragmentCode);
 	void CompileShader(const char* vertexCode, const char* geometryCode, const char* fragmentCode);
@@ -116,4 +115,3 @@ private:
 
 	void CompileProgram();
 };
-

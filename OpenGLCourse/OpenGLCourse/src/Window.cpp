@@ -1,31 +1,35 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
 #include "Window.h"
 
 Window::Window()
 {
-	width = 800;
-	height = 600;
+	Width = 800;
+	Height = 600;
 
 	for(size_t i = 0; i < 1024; i++)
 	{
-		keys[i] = 0;
+		Keys[i] = 0;
 	}
 	
-	xChange = 0.0f;
-	yChange = 0.0f;
+	XChange = 0.0f;
+	YChange = 0.0f;
 }
 
 Window::Window(GLint windowWidth, GLint windowHeight)
 {
-	width = windowWidth;
-	height = windowHeight;
+	Width = windowWidth;
+	Height = windowHeight;
 
 	for (size_t i = 0; i < 1024; i++)
 	{
-		keys[i] = 0;
+		Keys[i] = 0;
 	}
 	
-	xChange = 0.0f;
-	yChange = 0.0f;
+	XChange = 0.0f;
+	YChange = 0.0f;
 }
 
 int Window::Initialise()
@@ -47,8 +51,8 @@ int Window::Initialise()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	// Create the window
-	mainWindow = glfwCreateWindow(width, height, "Test Window", NULL, NULL);
-	if (!mainWindow)
+	MainWindow = glfwCreateWindow(Width, Height, "Test Window", NULL, NULL);
+	if (!MainWindow)
 	{
 		printf("Error creating GLFW window!");
 		glfwTerminate();
@@ -56,23 +60,23 @@ int Window::Initialise()
 	}
 
 	// Get buffer size information
-	glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferHeight);
+	glfwGetFramebufferSize(MainWindow, &BufferWidth, &BufferHeight);
 
 	// Set the current context
-	glfwMakeContextCurrent(mainWindow);
+	glfwMakeContextCurrent(MainWindow);
 
 	// Handle Key + Mouse Input
-	createCallbacks();
-	glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	CreateCallbacks();
+	glfwSetInputMode(MainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// Allow modern extension access
 	glewExperimental = GL_TRUE;
 
-	GLenum error = glewInit();
-	if (error != GLEW_OK)
+	GLenum Error = glewInit();
+	if (Error != GLEW_OK)
 	{
-		printf("Error: %s", glewGetErrorString(error));
-		glfwDestroyWindow(mainWindow);
+		printf("Error: %s", glewGetErrorString(Error));
+		glfwDestroyWindow(MainWindow);
 		glfwTerminate();
 		return 1;
 	}
@@ -80,36 +84,36 @@ int Window::Initialise()
 	glEnable(GL_DEPTH_TEST);
 
 	// Create Viewport
-	glViewport(0, 0, bufferWidth, bufferHeight);
+	glViewport(0, 0, BufferWidth, BufferHeight);
 
-	glfwSetWindowUserPointer(mainWindow, this);
+	glfwSetWindowUserPointer(MainWindow, this);
 
 	return 0;
 }
 
-void Window::createCallbacks()
+void Window::CreateCallbacks()
 {
-	glfwSetKeyCallback(mainWindow, handleKeys);
-	glfwSetCursorPosCallback(mainWindow, handleMouse);
+	glfwSetKeyCallback(MainWindow, HandleKeys);
+	glfwSetCursorPosCallback(MainWindow, HandleMouse);
 }
 
-GLfloat Window::getXChange()
+GLdouble Window::GetXChange()
 {
-	GLfloat theChange = xChange;
-	xChange = 0.0f;
-	return theChange;
+	GLdouble TheChange = XChange;
+	XChange = 0.0f;
+	return TheChange;
 }
 
-GLfloat Window::getYChange()
+GLdouble Window::GetYChange()
 {
-	GLfloat theChange = yChange;
-	yChange = 0.0f;
-	return theChange;
+	GLdouble TheChange = YChange;
+	YChange = 0.0f;
+	return TheChange;
 }
 
-void Window::handleKeys(GLFWwindow* window, int key, int code, int action, int mode)
+void Window::HandleKeys(GLFWwindow* window, int key, int code, int action, int mode)
 {
-	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+	Window* TheWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
@@ -120,35 +124,35 @@ void Window::handleKeys(GLFWwindow* window, int key, int code, int action, int m
 	{
 		if (action == GLFW_PRESS)
 		{
-			theWindow->keys[key] = true;
+			TheWindow->Keys[key] = true;
 		}
 		else if (action == GLFW_RELEASE)
 		{
-			theWindow->keys[key] = false;
+			TheWindow->Keys[key] = false;
 		}
 	}
 }
 
-void Window::handleMouse(GLFWwindow* window, double xPos, double yPos)
+void Window::HandleMouse(GLFWwindow* window, GLdouble xPos, GLdouble yPos)
 {
-	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+	Window* TheWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
-	if (theWindow->mouseFirstMoved)
+	if (TheWindow->MouseFirstMoved)
 	{
-		theWindow->lastX = xPos;
-		theWindow->lastY = yPos;
-		theWindow->mouseFirstMoved = false;
+		TheWindow->LastX = xPos;
+		TheWindow->LastY = yPos;
+		TheWindow->MouseFirstMoved = false;
 	}
 
-	theWindow->xChange = xPos - theWindow->lastX;
-	theWindow->yChange = theWindow->lastY - yPos;
+	TheWindow->XChange = xPos - TheWindow->LastX;
+	TheWindow->YChange = TheWindow->LastY - yPos;
 
-	theWindow->lastX = xPos;
-	theWindow->lastY = yPos;
+	TheWindow->LastX = xPos;
+	TheWindow->LastY = yPos;
 }
 
 Window::~Window()
 {
-	glfwDestroyWindow(mainWindow);
+	glfwDestroyWindow(MainWindow);
 	glfwTerminate();
 }

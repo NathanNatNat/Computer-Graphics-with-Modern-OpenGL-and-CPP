@@ -1,16 +1,15 @@
-#pragma once
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
+#pragma once
 #include <vector>
 #include <string>
-
 #include <GL\glew.h>
-
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
-
 #include "CommonValues.h"
-
 #include "Mesh.h"
 #include "Shader.h"
 
@@ -26,10 +25,9 @@ public:
 	~Skybox();
 
 private:
-	Mesh* skyMesh{ };
-	Shader* skyShader{ };
+	Mesh* SkyMesh{ };
+	Shader* SkyShader{ };
 
-	GLuint textureId{ };
-	GLuint uniformProjection{ }, uniformView{ };
+	GLuint TextureID{ };
+	GLuint UniformProjection{ }, UniformView{ };
 };
-

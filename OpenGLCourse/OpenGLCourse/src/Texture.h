@@ -1,7 +1,9 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
 #pragma once
-
 #include <GL\glew.h>
-
 #include "CommonValues.h"
 
 class Texture
@@ -19,9 +21,8 @@ public:
 	~Texture();
 
 private:
-	GLuint textureID{ };
-	int width{ }, height{ }, bitDepth{ };
+	GLuint TextureID{ };
+	int Width{ }, Height{ }, BitDepth{ };
 
-	const char* fileLocation{ };
+	const char* FileLocation{ };
 };
-

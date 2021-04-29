@@ -1,10 +1,14 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
 #include "OmniShadowMap.h"
 
-OmniShadowMap::OmniShadowMap() : ShadowMap() {}
+OmniShadowMap::OmniShadowMap() : ShadowMap() { }
 
 bool OmniShadowMap::Init(unsigned int width, unsigned int height)
 {
-	shadowWidth = width; shadowHeight = height;
+	ShadowWidth = width; ShadowHeight = height;
 
 	glGenFramebuffers(1, &FBO);
 
@@ -13,7 +17,7 @@ bool OmniShadowMap::Init(unsigned int width, unsigned int height)
 
 	for (GLenum i = 0; i < 6; i++)
 	{
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, ShadowWidth, ShadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 	}
 
 	glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -50,6 +54,4 @@ void OmniShadowMap::Read(GLenum texUnit)
 	glBindTexture(GL_TEXTURE_CUBE_MAP, shadowMap);
 }
 
-OmniShadowMap::~OmniShadowMap()
-{
-}
+OmniShadowMap::~OmniShadowMap() { }

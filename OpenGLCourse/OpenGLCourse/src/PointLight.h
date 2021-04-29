@@ -1,8 +1,10 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
 #pragma once
 #include "Light.h"
-
 #include <vector>
-
 #include "OmniShadowMap.h"
 
 class PointLight :
@@ -28,10 +30,9 @@ public:
 	~PointLight();
 
 protected:
-	glm::vec3 position{ };
+	glm::vec3 Position{ };
 
-	GLfloat constant{ }, linear{ }, exponent{ };
+	GLfloat Constant{ }, Linear{ }, Exponent{ };
 
-	GLfloat farPlane{ };
+	GLfloat FarPlane{ };
 };
-

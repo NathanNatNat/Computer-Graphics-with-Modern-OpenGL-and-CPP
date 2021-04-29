@@ -1,3 +1,7 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
 #include "Mesh.h"
 
 Mesh::Mesh()
@@ -5,12 +9,12 @@ Mesh::Mesh()
 	VAO = 0;
 	VBO = 0;
 	IBO = 0;
-	indexCount = 0;
+	IndexCount = 0;
 }
 
-void Mesh::CreateMesh(GLfloat *vertices, unsigned int *indices, unsigned int numOfVertices, unsigned int numOfIndices)
+void Mesh::CreateMesh(GLfloat *vertices, unsigned int *indices, size_t numOfVertices, size_t numOfIndices)
 {
-	indexCount = numOfIndices;
+	IndexCount = { static_cast<GLsizei>(numOfIndices) };
 
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
@@ -40,7 +44,7 @@ void Mesh::RenderMesh()
 {
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, IndexCount, GL_UNSIGNED_INT, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
@@ -65,9 +69,8 @@ void Mesh::ClearMesh()
 		VAO = 0;
 	}
 
-	indexCount = 0;
+	IndexCount = 0;
 }
-
 
 Mesh::~Mesh()
 {

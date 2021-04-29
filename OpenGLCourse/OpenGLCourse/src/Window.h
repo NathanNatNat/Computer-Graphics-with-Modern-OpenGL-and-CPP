@@ -1,7 +1,9 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
 #pragma once
-
 #include "stdio.h"
-
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 
@@ -14,34 +16,34 @@ public:
 
 	int Initialise();
 
-	GLint getBufferWidth() { return bufferWidth; }
-	GLint getBufferHeight() { return bufferHeight; }
+	GLint GetBufferWidth() { return BufferWidth; }
+	GLint GetBufferHeight() { return BufferHeight; }
 
-	bool getShouldClose() { return glfwWindowShouldClose(mainWindow); }
+	bool GetShouldClose() { return glfwWindowShouldClose(MainWindow); }
 
-	bool* getsKeys() { return keys; }
-	GLfloat getXChange();
-	GLfloat getYChange();
+	bool* GetKeys() { return Keys; }
+	GLdouble GetXChange();
+	GLdouble GetYChange();
 
-	void swapBuffers() { glfwSwapBuffers(mainWindow); }
+	void SwapBuffers() { glfwSwapBuffers(MainWindow); }
 
 	~Window();
 
 private:
-	GLFWwindow* mainWindow{ };
+	GLFWwindow* MainWindow{ };
 
-	GLint width{ }, height{ };
-	GLint bufferWidth{ }, bufferHeight{ };
+	GLint Width{ }, Height{ };
+	GLint BufferWidth{ }, BufferHeight{ };
 
-	bool keys[1024];
+	bool Keys[1024];
 
-	GLfloat lastX{ };
-	GLfloat lastY{ };
-	GLfloat xChange{ };
-	GLfloat yChange{ };
-	bool mouseFirstMoved{ };
+	GLdouble LastX{ };
+	GLdouble LastY{ };
+	GLdouble XChange{ };
+	GLdouble YChange{ };
+	bool MouseFirstMoved{ };
 
-	void createCallbacks();
-	static void handleKeys(GLFWwindow* window, int key, int code, int action, int mode);
-	static void handleMouse(GLFWwindow* window, double xPos, double yPos);
+	void CreateCallbacks();
+	static void HandleKeys(GLFWwindow* window, int key, int code, int action, int mode);
+	static void HandleMouse(GLFWwindow* window, GLdouble xPos, GLdouble yPos);
 };
