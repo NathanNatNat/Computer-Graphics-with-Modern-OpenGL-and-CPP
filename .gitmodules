@@ -12,7 +12,7 @@
 	url = https://github.com/natnat201193/imgui
 [submodule "Dependencies/glew"]
 	path = Dependencies/glew
-	url = https://github.com/natnat201193/glew
+	url = https://github.com/Perlmint/glew-cmake
 [submodule "Dependencies/assimp"]
 	path = Dependencies/assimp
 	url = https://github.com/natnat201193/assimp
