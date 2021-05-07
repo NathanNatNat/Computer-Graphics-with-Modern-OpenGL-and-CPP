@@ -16,6 +16,3 @@
 [submodule "Dependencies/stb"]
 	path = Dependencies/stb
 	url = https://github.com/natnat201193/stb
-[submodule "Dependencies/glew"]
-	path = Dependencies/glew
-	url = https://github.com/Perlmint/glew-cmake
