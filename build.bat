@@ -1,1 +1,1 @@
-cmake --build ..\OpenGLCourseBuild --clean-first --config Debug --
+cmake --build .\Build --clean-first --config Debug --
