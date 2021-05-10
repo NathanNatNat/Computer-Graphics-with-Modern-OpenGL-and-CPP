@@ -1,1 +1,1 @@
-cmake --build .\Build --clean-first --config Debug --
+cmake --build .\Build --config Debug --
