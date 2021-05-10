@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.20.2)
 project (OpenGLCourse)
 
 add_executable(
-    ${PROJECT_NAME} 
+    ${PROJECT_NAME}
     src/main.cpp
     src/Window.cpp
     src/Window.h
@@ -52,3 +52,30 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
         endif()
     endif()
 endif()
+
+# glfw
+option(GLFW_BUILD_DOCS OFF)
+option(GLFW_BUILD_EXAMPLES OFF)
+option(GLFW_BUILD_TESTS OFF)
+option(GLFW_INSTALL OFF)
+add_subdirectory(Dependencies/glfw)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
+
+# glad
+option(GLAD_EXPORT OFF)
+add_subdirectory(Dependencies/glad)
+target_link_libraries(${PROJECT_NAME} PRIVATE glad)
+
+# glm
+add_subdirectory(Dependencies/glm)
+target_link_libraries(${PROJECT_NAME} PRIVATE glm)
+
+# assimp
+option(ASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT OFF)
+option(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
+option(ASSIMP_BUILD_SAMPLES OFF)
+option(ASSIMP_BUILD_TESTS OFF)
+add_subdirectory(Dependencies/assimp)
+target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
+
+include_directories(Dependencies/stb)
