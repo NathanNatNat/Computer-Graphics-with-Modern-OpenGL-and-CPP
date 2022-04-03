@@ -32,4 +32,4 @@ glm::mat4 DirectionalLight::CalculateLightTransform()
 	return LightProj * glm::lookAt(-Direction, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
-DirectionalLight::~DirectionalLight() { }
+DirectionalLight::~DirectionalLight() = default;

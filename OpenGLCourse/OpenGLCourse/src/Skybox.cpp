@@ -4,7 +4,7 @@
 
 #include "Skybox.h"
 
-Skybox::Skybox() { }
+Skybox::Skybox() = default;
 
 Skybox::Skybox(std::vector<std::string> faceLocations)
 {
@@ -101,4 +101,4 @@ void Skybox::DrawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 	glDepthMask(GL_TRUE);
 }
 
-Skybox::~Skybox() { }
+Skybox::~Skybox() = default;

@@ -76,4 +76,4 @@ glm::vec3 PointLight::GetPosition()
 	return Position;
 }
 
-PointLight::~PointLight() { }
+PointLight::~PointLight() = default;

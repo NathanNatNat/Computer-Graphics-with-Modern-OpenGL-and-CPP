@@ -3,6 +3,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #include "ShadowMap.h"
+#include <iostream>
 
 ShadowMap::ShadowMap()
 {
@@ -37,7 +38,7 @@ bool ShadowMap::Init(GLuint width, GLuint height)
 
 	if (Status != GL_FRAMEBUFFER_COMPLETE)
 	{
-		printf("Framebuffer error: %s\n", Status);
+		std::cout << "Framebuffer error: " << Status << std::endl;
 		return false;
 	}
 

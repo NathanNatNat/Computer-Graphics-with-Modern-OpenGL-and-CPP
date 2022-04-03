@@ -21,4 +21,4 @@ Light::Light(GLuint shadowWidth, GLuint shadowHeight, GLfloat red, GLfloat green
 	shadowMap->Init(shadowWidth, shadowHeight);
 }
 
-Light::~Light() { }
+Light::~Light() = default;

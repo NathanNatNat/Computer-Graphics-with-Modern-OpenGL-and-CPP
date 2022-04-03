@@ -3,8 +3,9 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #include "Model.h"
+#include <iostream>
 
-Model::Model() { }
+Model::Model() = default;
 
 void Model::RenderModel()
 {
@@ -28,7 +29,7 @@ void Model::LoadModel(const std::string & fileName)
 
 	if (!scene)
 	{
-		printf("Model (%s) failed to load: %s", fileName, importer.GetErrorString());
+		std::cout << "Model: (" << fileName << ") failed to load: " << importer.GetErrorString() << std::endl;
 		return;
 	}
 
@@ -107,7 +108,8 @@ void Model::LoadMaterials(const aiScene * scene)
 
 				if (!TextureList[i]->LoadTexture())
 				{
-					printf("Failed to load texture at: %s\n", TexPath);
+					std::cout << "Failed to load texture at: " << TexPath << std::endl;
+
 					delete TextureList[i];
 					TextureList[i] = { nullptr };
 				}
@@ -143,4 +145,4 @@ void Model::ClearModel()
 	}
 }
 
-Model::~Model() { }
+Model::~Model() = default;

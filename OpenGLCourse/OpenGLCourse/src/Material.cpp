@@ -22,4 +22,4 @@ void Material::UseMaterial(GLuint specularIntensityLocation, GLuint shininessLoc
 	glUniform1f(shininessLocation, Shininess);
 }
 
-Material::~Material() { }
+Material::~Material() = default;

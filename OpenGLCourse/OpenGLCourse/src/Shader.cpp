@@ -3,6 +3,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #include "Shader.h"
+#include <iostream>
 
 Shader::Shader()
 {
@@ -386,7 +387,7 @@ void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderT
 	{
 		GLchar eLog[1024] = { };
 		glGetShaderInfoLog(TheShader, sizeof(eLog), NULL, eLog);
-		printf("Error compiling the %d shader: '%s'\n", shaderType, eLog);
+		std::cout << "Error compiling the %d shader: '%s'\n", shaderType, eLog;
 		return;
 	}
 

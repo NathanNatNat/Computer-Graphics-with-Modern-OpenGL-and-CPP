@@ -162,9 +162,9 @@ void CreateObjects()
 
 void CreateShaders()
 {
-	Shader* Shader1 = { new Shader() };
-	Shader1->CreateFromFiles(vShader, fShader);
-	ShaderList.push_back(*Shader1);
+	Shader* ShaderPtr = new Shader();
+	ShaderPtr->CreateFromFiles(vShader, fShader);
+	ShaderList.push_back(*ShaderPtr);
 
 	DirectionalShadowShader.CreateFromFiles("Shaders/directional_shadow_map_vert.glsl", "Shaders/directional_shadow_map_frag.glsl");
 	OmniShadowShader.CreateFromFiles("Shaders/omni_shadow_map_vert.glsl", "Shaders/omni_shadow_map_geom.glsl", "Shaders/omni_shadow_map_frag.glsl");

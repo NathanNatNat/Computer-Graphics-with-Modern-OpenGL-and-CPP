@@ -3,6 +3,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #include "OmniShadowMap.h"
+#include <iostream>
 
 OmniShadowMap::OmniShadowMap() : ShadowMap() { }
 
@@ -37,7 +38,7 @@ bool OmniShadowMap::Init(GLuint width, GLuint height)
 
 	if (Status != GL_FRAMEBUFFER_COMPLETE)
 	{
-		printf("Framebuffer error: %s\n", Status);
+		std::cout << "Framebuffer error: " << Status << std::endl;
 		return false;
 	}
 
@@ -55,4 +56,4 @@ void OmniShadowMap::Read(GLenum texUnit)
 	glBindTexture(GL_TEXTURE_CUBE_MAP, shadowMap);
 }
 
-OmniShadowMap::~OmniShadowMap() { }
+OmniShadowMap::~OmniShadowMap() = default;
