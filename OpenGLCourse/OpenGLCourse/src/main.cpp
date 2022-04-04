@@ -40,7 +40,7 @@ Window MainWindow{ };
 
 std::vector<Mesh*> MeshList{ };
 
-std::vector<Shader> ShaderList{ };
+std::vector<Shader*> ShaderList{ };
 
 Shader 
 	DirectionalShadowShader{ },
@@ -164,7 +164,7 @@ void CreateShaders()
 {
 	Shader* ShaderPtr = new Shader();
 	ShaderPtr->CreateFromFiles(vShader, fShader);
-	ShaderList.push_back(*ShaderPtr);
+	ShaderList.push_back(ShaderPtr);
 
 	DirectionalShadowShader.CreateFromFiles("Shaders/directional_shadow_map_vert.glsl", "Shaders/directional_shadow_map_frag.glsl");
 	OmniShadowShader.CreateFromFiles("Shaders/omni_shadow_map_vert.glsl", "Shaders/omni_shadow_map_geom.glsl", "Shaders/omni_shadow_map_frag.glsl");
@@ -273,35 +273,35 @@ void RenderPass(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 
 	skybox.DrawSkybox(viewMatrix, projectionMatrix);
 
-	ShaderList[0].UseShader();
+	ShaderList[0]->UseShader();
 
-	UniformModel = { ShaderList[0].GetModelLocation() };
-	UniformProjection = { ShaderList[0].GetProjectionLocation() };
-	UniformView = { ShaderList[0].GetViewLocation() };
-	UniformModel = { ShaderList[0].GetModelLocation() };
-	UniformEyePosition = { ShaderList[0].GetEyePositionLocation() };
-	UniformSpecularIntensity = { ShaderList[0].GetSpecularIntensityLocation() };
-	UniformShininess = { ShaderList[0].GetShininessLocation() };
+	UniformModel = { ShaderList[0]->GetModelLocation() };
+	UniformProjection = { ShaderList[0]->GetProjectionLocation() };
+	UniformView = { ShaderList[0]->GetViewLocation() };
+	UniformModel = { ShaderList[0]->GetModelLocation() };
+	UniformEyePosition = { ShaderList[0]->GetEyePositionLocation() };
+	UniformSpecularIntensity = { ShaderList[0]->GetSpecularIntensityLocation() };
+	UniformShininess = { ShaderList[0]->GetShininessLocation() };
 
 	glUniformMatrix4fv(UniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 	glUniformMatrix4fv(UniformView, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 	glm::vec3 CameraPos{ camera.GetCameraPosition() };
 	glUniform3f(UniformEyePosition, CameraPos.x, CameraPos.y, CameraPos.z);
 
-	ShaderList[0].SetDirectionalLight(&MainLight);
-	ShaderList[0].SetPointLights(PointLights, PointLightCount, 3, 0);
-	ShaderList[0].SetSpotLights(SpotLights, SpotLightCount, 3 + PointLightCount, PointLightCount);
-	ShaderList[0].SetDirectionalLightTransform(MainLight.CalculateLightTransform());
+	ShaderList[0]->SetDirectionalLight(&MainLight);
+	ShaderList[0]->SetPointLights(PointLights, PointLightCount, 3, 0);
+	ShaderList[0]->SetSpotLights(SpotLights, SpotLightCount, 3 + PointLightCount, PointLightCount);
+	ShaderList[0]->SetDirectionalLightTransform(MainLight.CalculateLightTransform());
 
 	MainLight.GetShadowMap()->Read(GL_TEXTURE2);
-	ShaderList[0].SetTexture(1);
-	ShaderList[0].SetDirectionalShadowMap(2);
+	ShaderList[0]->SetTexture(1);
+	ShaderList[0]->SetDirectionalShadowMap(2);
 
 	glm::vec3 LowerLight = { camera.GetCameraPosition() };
 	LowerLight.y -= 0.3f;
 	SpotLights[0].SetFlash(LowerLight, camera.GetCameraDirection());
 
-	ShaderList[0].Validate();
+	ShaderList[0]->Validate();
 
 	RenderScene();
 }
