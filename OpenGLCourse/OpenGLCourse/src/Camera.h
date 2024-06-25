@@ -3,10 +3,9 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #pragma once
-#include <GL\glew.h>
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-#include <GLFW\glfw3.h>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 class Camera
 {
@@ -14,13 +13,13 @@ public:
 	Camera();
 	Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLfloat startPitch, GLfloat startMoveSpeed, GLfloat startTurnSpeed);
 
-	void KeyControl(bool* keys, GLdouble deltaTime);
+	void KeyControl(const bool* keys, GLdouble deltaTime);
 	void MouseControl(GLdouble xChange, GLdouble yChange);
 
-	glm::vec3 GetCameraPosition();
-	glm::vec3 GetCameraDirection();
+	[[nodiscard]] glm::vec3 GetCameraPosition() const;
+	[[nodiscard]] glm::vec3 GetCameraDirection() const;
 
-	glm::mat4 CalculateViewMatrix();
+	[[nodiscard]] glm::mat4 CalculateViewMatrix() const;
 
 	~Camera();
 

@@ -22,7 +22,7 @@ public:
 	void UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation,
 		GLuint diffuseIntensityLocation, GLuint positionLocation, GLuint directionLocation,
 		GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation,
-		GLuint edgeLocation);
+		GLuint edgeLocation) const;
 
 	void SetFlash(glm::vec3 pos, glm::vec3 dir);
 

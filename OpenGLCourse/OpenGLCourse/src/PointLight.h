@@ -20,11 +20,11 @@ public:
 
 	void UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation,
 		GLuint diffuseIntensityLocation, GLuint positionLocation,
-		GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation);
+		GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation) const;
 
-	std::vector<glm::mat4> CalculateLightTransform();
-	GLfloat GetFarPlane();
-	glm::vec3 GetPosition();
+	[[nodiscard]] std::vector<glm::mat4> CalculateLightTransform() const;
+	[[nodiscard]] GLfloat GetFarPlane() const;
+	[[nodiscard]] glm::vec3 GetPosition() const;
 
 	~PointLight();
 

@@ -11,9 +11,9 @@ public:
 	DirectionalLight();
 	DirectionalLight(GLuint shadowWidth, GLuint shadowHeight, GLfloat red, GLfloat green, GLfloat blue, GLfloat aIntensity, GLfloat dIntensity, GLfloat xDir, GLfloat yDir, GLfloat zDir);
 
-	void UseLight(GLint ambientIntensityLocation, GLint ambientColourLocation, GLint diffuseIntensityLocation, GLint directionLocation);
+	void UseLight(GLint ambientIntensityLocation, GLint ambientColourLocation, GLint diffuseIntensityLocation, GLint directionLocation) const;
 
-	glm::mat4 CalculateLightTransform();
+	[[nodiscard]] glm::mat4 CalculateLightTransform() const;
 
 	~DirectionalLight();
 

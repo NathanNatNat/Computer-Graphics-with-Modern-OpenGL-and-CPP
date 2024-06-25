@@ -4,7 +4,7 @@
 
 #include "PointLight.h"
 
-PointLight::PointLight() : Light()
+PointLight::PointLight()
 {
 	Position = { glm::vec3(0.0f, 0.0f, 0.0f) };
 	Constant = { 1.0f };
@@ -12,12 +12,12 @@ PointLight::PointLight() : Light()
 	Exponent = { };
 }
 
-PointLight::PointLight(GLuint shadowWidth, GLuint shadowHeight,
-						GLfloat near, GLfloat far, 
-						GLfloat red, GLfloat green, GLfloat blue,
-						GLfloat aIntensity, GLfloat dIntensity, 
-						GLfloat xPos, GLfloat yPos, GLfloat zPos, 
-						GLfloat con, GLfloat lin, GLfloat exp) : Light(shadowWidth, shadowHeight, red, green, blue, aIntensity, dIntensity)
+PointLight::PointLight(const GLuint shadowWidth, const GLuint shadowHeight,
+                       const GLfloat near, GLfloat far,
+                       const GLfloat red, const GLfloat green, const GLfloat blue,
+                       const GLfloat aIntensity, const GLfloat dIntensity,
+                       const GLfloat xPos, const GLfloat yPos, const GLfloat zPos, 
+                       GLfloat con, GLfloat lin, GLfloat exp) : Light(shadowWidth, shadowHeight, red, green, blue, aIntensity, dIntensity)
 {
 	Position = { glm::vec3(xPos, yPos, zPos) };
 	Constant = { con };
@@ -26,16 +26,16 @@ PointLight::PointLight(GLuint shadowWidth, GLuint shadowHeight,
 
 	FarPlane = { far };
 
-	float Aspect = { static_cast<float>(shadowWidth) / static_cast<float>(shadowHeight) };
+	const float Aspect = { static_cast<float>(shadowWidth) / static_cast<float>(shadowHeight) };
 	LightProj = { glm::perspective(glm::radians(90.0f), Aspect, near, far) };
 
 	shadowMap = { new OmniShadowMap() };
 	shadowMap->Init(shadowWidth, shadowHeight);
 }
 
-void PointLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation,
-	GLuint diffuseIntensityLocation, GLuint positionLocation,
-	GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation)
+void PointLight::UseLight(const GLuint ambientIntensityLocation, const GLuint ambientColourLocation,
+                          const GLuint diffuseIntensityLocation, const GLuint positionLocation,
+                          const GLuint constantLocation, const GLuint linearLocation, const GLuint exponentLocation) const
 {
 	glUniform3f(ambientColourLocation, Colour.x, Colour.y, Colour.z);
 	glUniform1f(ambientIntensityLocation, AmbientIntensity);
@@ -47,7 +47,7 @@ void PointLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourL
 	glUniform1f(exponentLocation, Exponent);
 }
 
-std::vector<glm::mat4> PointLight::CalculateLightTransform()
+std::vector<glm::mat4> PointLight::CalculateLightTransform() const
 {
 	std::vector<glm::mat4> LightMatrices{ };
 	LightMatrices.reserve(6);
@@ -66,12 +66,12 @@ std::vector<glm::mat4> PointLight::CalculateLightTransform()
 	return LightMatrices;
 }
 
-GLfloat PointLight::GetFarPlane()
+GLfloat PointLight::GetFarPlane() const
 {
 	return FarPlane;
 }
 
-glm::vec3 PointLight::GetPosition()
+glm::vec3 PointLight::GetPosition() const
 {
 	return Position;
 }

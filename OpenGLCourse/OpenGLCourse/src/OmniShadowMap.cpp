@@ -1,11 +1,7 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-
 #include "OmniShadowMap.h"
 #include <iostream>
 
-OmniShadowMap::OmniShadowMap() : ShadowMap() { }
+OmniShadowMap::OmniShadowMap() = default;
 
 bool OmniShadowMap::Init(GLuint width, GLuint height)
 {
@@ -34,11 +30,11 @@ bool OmniShadowMap::Init(GLuint width, GLuint height)
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 
-	GLenum Status = { glCheckFramebufferStatus(GL_FRAMEBUFFER) };
+	const GLenum Status = { glCheckFramebufferStatus(GL_FRAMEBUFFER) };
 
 	if (Status != GL_FRAMEBUFFER_COMPLETE)
 	{
-		std::cout << "Framebuffer error: " << Status << std::endl;
+		std::cout << "Framebuffer error: " << Status << '\n';
 		return false;
 	}
 
@@ -50,9 +46,9 @@ void OmniShadowMap::Write()
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
 }
 
-void OmniShadowMap::Read(GLenum texUnit)
+void OmniShadowMap::Read(const GLenum TextureUnit)
 {
-	glActiveTexture(texUnit);
+	glActiveTexture(TextureUnit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, shadowMap);
 }
 

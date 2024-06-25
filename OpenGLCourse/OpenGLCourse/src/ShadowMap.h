@@ -3,8 +3,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #pragma once
-#include <stdio.h>
-#include <GL\glew.h>
+#include <GL/glew.h>
 
 class ShadowMap
 {
@@ -17,10 +16,10 @@ public:
 
 	virtual void Read(GLenum TextureUnit);
 
-	GLuint GetShadowWidth() { return ShadowWidth; }
-	GLuint GetShadowHeight() { return ShadowHeight; }
+	[[nodiscard]] GLuint GetShadowWidth() const { return ShadowWidth; }
+	[[nodiscard]] GLuint GetShadowHeight() const { return ShadowHeight; }
 
-	~ShadowMap();
+	virtual ~ShadowMap();
 protected:
 	GLuint 
 		FBO{ },

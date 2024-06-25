@@ -3,6 +3,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #include "Texture.h"
+#include "CommonValues.h"
 
 Texture::Texture()
 {
@@ -76,7 +77,7 @@ bool Texture::LoadTextureA()
 	return true;
 }
 
-void Texture::UseTexture()
+void Texture::UseTexture() const
 {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, TextureID);

@@ -3,9 +3,9 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #pragma once
-#include <GL\glew.h>
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "ShadowMap.h"
 
 class Light
@@ -14,7 +14,7 @@ public:
 	Light();
 	Light(GLuint shadowWidth, GLuint shadowHeight, GLfloat red, GLfloat green, GLfloat blue, GLfloat aIntensity, GLfloat dIntensity);
 
-	ShadowMap* GetShadowMap() { return shadowMap; }
+	[[nodiscard]] ShadowMap* GetShadowMap() const { return shadowMap; }
 
 	~Light();
 

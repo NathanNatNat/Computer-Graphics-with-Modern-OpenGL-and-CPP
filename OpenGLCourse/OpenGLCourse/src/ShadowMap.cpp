@@ -25,7 +25,7 @@ bool ShadowMap::Init(GLuint width, GLuint height)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	constexpr float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
@@ -34,11 +34,11 @@ bool ShadowMap::Init(GLuint width, GLuint height)
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 
-	GLenum Status = { glCheckFramebufferStatus(GL_FRAMEBUFFER) };
+	const GLenum Status = { glCheckFramebufferStatus(GL_FRAMEBUFFER) };
 
 	if (Status != GL_FRAMEBUFFER_COMPLETE)
 	{
-		std::cout << "Framebuffer error: " << Status << std::endl;
+		std::cout << "Framebuffer error: " << Status << '\n';
 		return false;
 	}
 
@@ -50,9 +50,9 @@ void ShadowMap::Write()
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
 }
 
-void ShadowMap::Read(GLenum texUnit)
+void ShadowMap::Read(const GLenum TextureUnit)
 {
-	glActiveTexture(texUnit);
+	glActiveTexture(TextureUnit);
 	glBindTexture(GL_TEXTURE_2D, shadowMap);
 }
 

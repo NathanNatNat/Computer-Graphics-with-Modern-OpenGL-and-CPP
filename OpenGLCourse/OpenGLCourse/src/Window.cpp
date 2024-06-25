@@ -3,15 +3,16 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #include "Window.h"
+#include <cstdio>
 
 Window::Window()
 {
 	Width = { 800 };
 	Height = { 600 };
 
-	for(size_t i = 0; i < 1024; i++)
+	for (bool& Key : Keys)
 	{
-		Keys[i] = { };
+		Key = { };
 	}
 	
 	XChange = { };
@@ -23,9 +24,9 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	Width = { windowWidth };
 	Height = { windowHeight };
 
-	for (size_t i = 0; i < 1024; i++)
+	for (bool& Key : Keys)
 	{
-		Keys[i] = { };
+		Key = { };
 	}
 	
 	XChange = { };
@@ -51,7 +52,7 @@ int Window::Initialise()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	// Create the window
-	MainWindow = { glfwCreateWindow(Width, Height, "OpenGL Course", NULL, NULL) };
+	MainWindow = { glfwCreateWindow(Width, Height, "OpenGL Course", nullptr, nullptr) };
 	if (!MainWindow)
 	{
 		printf("Error creating GLFW window!");
@@ -72,10 +73,9 @@ int Window::Initialise()
 	// Allow modern extension access
 	glewExperimental = { GL_TRUE };
 
-	GLenum Error = { glewInit() };
-	if (Error != GLEW_OK)
+	if (const GLenum Error = { glewInit() }; Error != GLEW_OK)
 	{
-		printf("Error: %s", glewGetErrorString(Error));
+		printf("Error: %p", glewGetErrorString(Error));
 		glfwDestroyWindow(MainWindow);
 		glfwTerminate();
 		return 1;
@@ -91,7 +91,7 @@ int Window::Initialise()
 	return 0;
 }
 
-void Window::CreateCallbacks()
+void Window::CreateCallbacks() const
 {
 	glfwSetKeyCallback(MainWindow, HandleKeys);
 	glfwSetCursorPosCallback(MainWindow, HandleMouse);
@@ -99,19 +99,19 @@ void Window::CreateCallbacks()
 
 GLdouble Window::GetXChange()
 {
-	GLdouble TheChange = { XChange };
+	const GLdouble TheChange = { XChange };
 	XChange = { };
 	return TheChange;
 }
 
 GLdouble Window::GetYChange()
 {
-	GLdouble TheChange = { YChange };
+	const GLdouble TheChange = { YChange };
 	YChange = { };
 	return TheChange;
 }
 
-void Window::HandleKeys(GLFWwindow* window, int key, int code, int action, int mode)
+void Window::HandleKeys(GLFWwindow* window, const int key, int code, const int action, int mode)
 {
 	Window* TheWindow = { static_cast<Window*>(glfwGetWindowUserPointer(window)) };
 

@@ -3,6 +3,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #include "Camera.h"
+#include <GLFW/glfw3.h>
 
 Camera::Camera() = default;
 
@@ -20,9 +21,9 @@ Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLf
 	Update();
 }
 
-void Camera::KeyControl(bool* keys, GLdouble deltaTime)
+void Camera::KeyControl(const bool* keys, const GLdouble deltaTime)
 {
-	GLdouble Velocity = MoveSpeed * deltaTime;
+	const GLdouble Velocity = MoveSpeed * deltaTime;
 
 	if (keys[GLFW_KEY_W])
 	{
@@ -66,17 +67,17 @@ void Camera::MouseControl(GLdouble xChange, GLdouble yChange)
 	Update();
 }
 
-glm::mat4 Camera::CalculateViewMatrix()
+glm::mat4 Camera::CalculateViewMatrix() const
 {
 	return glm::lookAt(Position, Position + Front, Up);
 }
 
-glm::vec3 Camera::GetCameraPosition()
+glm::vec3 Camera::GetCameraPosition() const
 {
 	return Position;
 }
 
-glm::vec3 Camera::GetCameraDirection()
+glm::vec3 Camera::GetCameraDirection() const
 {
 	return glm::normalize(Front);
 }

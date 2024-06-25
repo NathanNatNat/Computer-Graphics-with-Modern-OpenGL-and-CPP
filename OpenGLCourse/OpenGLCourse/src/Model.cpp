@@ -3,15 +3,16 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #include "Model.h"
+#include <assimp/postprocess.h>
 #include <iostream>
 
 Model::Model() = default;
 
-void Model::RenderModel()
+void Model::RenderModel() const
 {
 	for (size_t i = 0; i < MeshList.size(); i++)
 	{
-		GLuint MaterialIndex = { MeshToTex[i] };
+		const GLuint MaterialIndex = { MeshToTex[i] };
 
 		if (MaterialIndex < TextureList.size() && TextureList[MaterialIndex])
 		{
@@ -29,7 +30,7 @@ void Model::LoadModel(const std::string & fileName)
 
 	if (!scene)
 	{
-		std::cout << "Model: (" << fileName << ") failed to load: " << importer.GetErrorString() << std::endl;
+		std::cout << "Model: (" << fileName << ") failed to load: " << importer.GetErrorString() << '\n';
 		return;
 	}
 
@@ -38,7 +39,7 @@ void Model::LoadModel(const std::string & fileName)
 	LoadMaterials(scene);
 }
 
-void Model::LoadNode(aiNode * node, const aiScene * scene)
+void Model::LoadNode(const aiNode * node, const aiScene * scene)
 {
 	for (GLuint i = 0; i < node->mNumMeshes; i++)
 	{
@@ -51,7 +52,7 @@ void Model::LoadNode(aiNode * node, const aiScene * scene)
 	}
 }
 
-void Model::LoadMesh(aiMesh * mesh, const aiScene * scene)
+void Model::LoadMesh(const aiMesh * mesh, const aiScene * scene)
 {
 	std::vector<GLfloat> Vertices{ };
 	std::vector<GLuint> Indices{ };
@@ -71,7 +72,7 @@ void Model::LoadMesh(aiMesh * mesh, const aiScene * scene)
 
 	for (GLuint i = 0; i < mesh->mNumFaces; i++)
 	{
-		aiFace Face = { mesh->mFaces[i] };
+		const aiFace Face = { mesh->mFaces[i] };
 		for (GLuint j = 0; j < Face.mNumIndices; j++)
 		{
 			Indices.push_back(Face.mIndices[j]);
@@ -79,7 +80,7 @@ void Model::LoadMesh(aiMesh * mesh, const aiScene * scene)
 	}
 
 	Mesh* NewMesh = { new Mesh() };
-	NewMesh->CreateMesh(&Vertices[0], &Indices[0], Vertices.size(), Indices.size());
+	NewMesh->CreateMesh(Vertices.data(), Indices.data(), Vertices.size(), Indices.size());
 	MeshList.push_back(NewMesh);
 	MeshToTex.push_back(mesh->mMaterialIndex);
 }
@@ -90,7 +91,7 @@ void Model::LoadMaterials(const aiScene * scene)
 	
 	for (GLuint i = 0; i < scene->mNumMaterials; i++)
 	{
-		aiMaterial* Material = { scene->mMaterials[i] };
+		const aiMaterial* Material = { scene->mMaterials[i] };
 
 		TextureList[i] = { nullptr };
 
@@ -99,7 +100,7 @@ void Model::LoadMaterials(const aiScene * scene)
 			aiString Path{ };
 			if (Material->GetTexture(aiTextureType_DIFFUSE, 0, &Path) == AI_SUCCESS)
 			{
-				size_t Idx = { std::string(Path.data).rfind("\\") };
+				const size_t Idx = { std::string(Path.data).rfind('\\') };
 				std::string Filename = { std::string(Path.data).substr(Idx + 1) };
 
 				std::string TexPath = { std::string("Textures/") + Filename };
@@ -108,7 +109,7 @@ void Model::LoadMaterials(const aiScene * scene)
 
 				if (!TextureList[i]->LoadTexture())
 				{
-					std::cout << "Failed to load texture at: " << TexPath << std::endl;
+					std::cout << "Failed to load texture at: " << TexPath << '\n';
 
 					delete TextureList[i];
 					TextureList[i] = { nullptr };
@@ -126,21 +127,21 @@ void Model::LoadMaterials(const aiScene * scene)
 
 void Model::ClearModel()
 {
-	for (size_t i = 0; i < MeshList.size(); i++)
+	for (auto& i : MeshList)
 	{
-		if (MeshList[i])
+		if (i)
 		{
-			delete MeshList[i];
-			MeshList[i] = { nullptr };
+			delete i;
+			i = { nullptr };
 		}
 	}
 
-	for (size_t i = 0; i < TextureList.size(); i++)
+	for (auto& i : TextureList)
 	{
-		if (TextureList[i])
+		if (i)
 		{
-			delete TextureList[i];
-			TextureList[i] = { nullptr };
+			delete i;
+			i = { nullptr };
 		}
 	}
 }

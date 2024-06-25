@@ -3,14 +3,12 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #pragma once
-#include <stdio.h>
 #include <string>
-#include <iostream>
 #include <fstream>
-#include <GL\glew.h>
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "CommonValues.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
@@ -25,32 +23,32 @@ public:
 	void CreateFromFiles(const char* vertexLocation, const char* fragmentLocation);
 	void CreateFromFiles(const char* vertexLocation, const char* geometryLocation, const char* fragmentLocation);
 
-	void Validate();
+	void Validate() const;
 
-	std::string ReadFile(const char* fileLocation);
+	static std::string ReadFile(const char* fileLocation);
 
-	GLuint GetProjectionLocation();
-	GLuint GetModelLocation();
-	GLuint GetViewLocation();
-	GLuint GetAmbientIntensityLocation();
-	GLuint GetAmbientColourLocation();
-	GLuint GetDiffuseIntensityLocation();
-	GLuint GetDirectionLocation();
-	GLuint GetSpecularIntensityLocation();
-	GLuint GetShininessLocation();
-	GLuint GetEyePositionLocation();
-	GLuint GetOmniLightPosLocation();
-	GLuint GetFarPlaneLocation();
+	[[nodiscard]] GLuint GetProjectionLocation() const;
+	[[nodiscard]] GLuint GetModelLocation() const;
+	[[nodiscard]] GLuint GetViewLocation() const;
+	[[nodiscard]] GLuint GetAmbientIntensityLocation() const;
+	[[nodiscard]] GLuint GetAmbientColourLocation() const;
+	[[nodiscard]] GLuint GetDiffuseIntensityLocation() const;
+	[[nodiscard]] GLuint GetDirectionLocation() const;
+	[[nodiscard]] GLuint GetSpecularIntensityLocation() const;
+	[[nodiscard]] GLuint GetShininessLocation() const;
+	[[nodiscard]] GLuint GetEyePositionLocation() const;
+	[[nodiscard]] GLuint GetOmniLightPosLocation() const;
+	[[nodiscard]] GLuint GetFarPlaneLocation() const;
 
-	void SetDirectionalLight(DirectionalLight * dLight);
-	void SetPointLights(PointLight * pLight, int lightCount, unsigned int textureUnit, unsigned int offset);
-	void SetSpotLights(SpotLight * sLight, GLint lightCount, unsigned int textureUnit, unsigned int offset);
-	void SetTexture(GLuint textureUnit);
-	void SetDirectionalShadowMap(GLuint textureUnit);
-	void SetDirectionalLightTransform(glm::mat4 lTransform);
-	void SetLightMatrices(std::vector<glm::mat4> lightMatrices);
+	void SetDirectionalLight(const DirectionalLight * dLight) const;
+	void SetPointLights(const PointLight * pLight, int lightCount, unsigned int textureUnit, unsigned int offset) const;
+	void SetSpotLights(const SpotLight * sLight, GLint lightCount, unsigned int textureUnit, unsigned int offset) const;
+	void SetTexture(GLuint textureUnit) const;
+	void SetDirectionalShadowMap(GLuint textureUnit) const;
+	void SetDirectionalLightTransform(glm::mat4 lTransform) const;
+	void SetLightMatrices(std::vector<glm::mat4> lightMatrices) const;
 
-	void UseShader();
+	void UseShader() const;
 	void ClearShader();
 
 	~Shader();
@@ -127,7 +125,7 @@ private:
 
 	void CompileShader(const char* vertexCode, const char* fragmentCode);
 	void CompileShader(const char* vertexCode, const char* geometryCode, const char* fragmentCode);
-	void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);
+	static void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);
 
 	void CompileProgram();
 };

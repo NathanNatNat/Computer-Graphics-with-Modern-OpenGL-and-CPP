@@ -3,15 +3,15 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #define STB_IMAGE_IMPLEMENTATION
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 #include <cmath>
 #include <vector>
-#include <GL\glew.h>
-#include <GLFW\glfw3.h>
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "CommonValues.h"
 #include "Window.h"
 #include "Mesh.h"
@@ -77,13 +77,16 @@ GLdouble
 
 GLfloat BlackhawkAngle = { 0.0f };
 
-// Vertex Shader
-static const char* vShader = { "Shaders/shader_vert.glsl" };
+namespace
+{
+	// Vertex Shader
+	const char *vShader = { "Shaders/shader_vert.glsl" };
 
-// Fragment Shader
-static const char* fShader = { "Shaders/shader_frag.glsl" };
+	// Fragment Shader
+	const char *fShader = { "Shaders/shader_frag.glsl" };
+}
 
-void CalcAverageNormals(const GLuint * indices, GLuint indiceCount, GLfloat * vertices, GLuint verticeCount, GLuint vLength, GLuint normalOffset)
+void CalcAverageNormals(const GLuint * indices, const GLuint indiceCount, GLfloat * vertices, const GLuint verticeCount, const GLuint vLength, const GLuint normalOffset)
 {
 	for (GLuint i = 0; i < indiceCount; i += 3)
 	{
@@ -105,7 +108,7 @@ void CalcAverageNormals(const GLuint * indices, GLuint indiceCount, GLfloat * ve
 
 	for (GLuint i = 0; i < verticeCount / vLength; i++)
 	{
-		unsigned int nOffset = i * vLength + normalOffset;
+		const unsigned int nOffset = i * vLength + normalOffset;
 		glm::vec3 Vec(vertices[nOffset], vertices[nOffset + 1], vertices[nOffset + 2]);
 		Vec = { glm::normalize(Vec) };
 		vertices[nOffset] = Vec.x; vertices[nOffset + 1] = Vec.y; vertices[nOffset + 2] = Vec.z;
@@ -114,7 +117,7 @@ void CalcAverageNormals(const GLuint * indices, GLuint indiceCount, GLfloat * ve
 
 void CreateObjects() 
 {
-	GLuint Indices[] = 
+	const GLuint Indices[] = 
 	{		
 		0, 3, 1,
 		1, 3, 2,
@@ -131,13 +134,13 @@ void CreateObjects()
 		 0.0f,  1.0f,  0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f
 	};
 
-	GLuint FloorIndices[] = 
+	const GLuint FloorIndices[] = 
 	{
 		0, 2, 1,
 		1, 2, 3
 	};
 
-	GLfloat FloorVertices[] = 
+	constexpr GLfloat FloorVertices[] = 
 	{
 		-10.0f, 0.0f, -10.0f, 0.0f,  0.0f,	0.0f, -1.0f, 0.0f,
 		 10.0f, 0.0f, -10.0f, 10.0f, 0.0f,	0.0f, -1.0f, 0.0f,
@@ -218,11 +221,11 @@ void RenderScene()
 	Blackhawk.RenderModel();
 }
 
-void DirectionalShadowMapPass(DirectionalLight* light)
+void DirectionalShadowMapPass(const DirectionalLight* light)
 {
 	DirectionalShadowShader.UseShader();
 
-	ShadowMap* LightShadowMap{ light->GetShadowMap() };
+	const ShadowMap* LightShadowMap{ light->GetShadowMap() };
 	glViewport(0, 0, LightShadowMap->GetShadowWidth(), LightShadowMap->GetShadowHeight());
 
 	light->GetShadowMap()->Write();
@@ -238,7 +241,7 @@ void DirectionalShadowMapPass(DirectionalLight* light)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void OmniShadowMapPass(PointLight* light)
+void OmniShadowMapPass(const PointLight* light)
 {
 	OmniShadowShader.UseShader();
 
@@ -252,7 +255,7 @@ void OmniShadowMapPass(PointLight* light)
 	UniformOmniLightPos = { OmniShadowShader.GetOmniLightPosLocation() };
 	UniformFarPlane = { OmniShadowShader.GetFarPlaneLocation() };
 
-	glm::vec3 LightPos{ light->GetPosition() };
+	const glm::vec3 LightPos{ light->GetPosition() };
 	glUniform3f(UniformOmniLightPos, LightPos.x, LightPos.y, LightPos.z);
 	glUniform1f(UniformFarPlane, light->GetFarPlane());
 	OmniShadowShader.SetLightMatrices(light->CalculateLightTransform());
@@ -285,7 +288,7 @@ void RenderPass(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 
 	glUniformMatrix4fv(UniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 	glUniformMatrix4fv(UniformView, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-	glm::vec3 CameraPos{ camera.GetCameraPosition() };
+	const glm::vec3 CameraPos{ camera.GetCameraPosition() };
 	glUniform3f(UniformEyePosition, CameraPos.x, CameraPos.y, CameraPos.z);
 
 	ShaderList[0]->SetDirectionalLight(&MainLight);
@@ -352,12 +355,12 @@ int main()
 
 	std::vector<std::string> SkyboxFaces{ };
 	SkyboxFaces.reserve(6);
-	SkyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
-	SkyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
-	SkyboxFaces.push_back("Textures/Skybox/cupertin-lake_up.tga");
-	SkyboxFaces.push_back("Textures/Skybox/cupertin-lake_dn.tga");
-	SkyboxFaces.push_back("Textures/Skybox/cupertin-lake_bk.tga");
-	SkyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");
+	SkyboxFaces.emplace_back("Textures/Skybox/cupertin-lake_rt.tga");
+	SkyboxFaces.emplace_back("Textures/Skybox/cupertin-lake_lf.tga");
+	SkyboxFaces.emplace_back("Textures/Skybox/cupertin-lake_up.tga");
+	SkyboxFaces.emplace_back("Textures/Skybox/cupertin-lake_dn.tga");
+	SkyboxFaces.emplace_back("Textures/Skybox/cupertin-lake_bk.tga");
+	SkyboxFaces.emplace_back("Textures/Skybox/cupertin-lake_ft.tga");
 
 	skybox = { Skybox(SkyboxFaces) };
 
@@ -368,7 +371,7 @@ int main()
 	UniformSpecularIntensity = { };
 	UniformShininess = { };
 
-	glm::mat4 Projection = { glm::perspective(glm::radians(60.0f), static_cast<GLfloat>(MainWindow.GetBufferWidth()) / MainWindow.GetBufferHeight(), 0.1f, 100.0f) };
+	const glm::mat4 Projection = { glm::perspective(glm::radians(60.0f), static_cast<GLfloat>(MainWindow.GetBufferWidth()) / MainWindow.GetBufferHeight(), 0.1f, 100.0f) };
 
 	// Loop until window closed
 	while (!MainWindow.GetShouldClose())

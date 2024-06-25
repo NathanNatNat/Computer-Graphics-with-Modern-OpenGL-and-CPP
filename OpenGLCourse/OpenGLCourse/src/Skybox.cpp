@@ -3,10 +3,13 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #include "Skybox.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "CommonValues.h"
 
 Skybox::Skybox() = default;
 
-Skybox::Skybox(std::vector<std::string> faceLocations)
+Skybox::Skybox(const std::vector<std::string>& faceLocations)
 {
 	SkyShader = { new Shader() };
 	SkyShader->CreateFromFiles("Shaders/skybox_vert.glsl", "Shaders/skybox_frag.glsl");
@@ -41,7 +44,7 @@ Skybox::Skybox(std::vector<std::string> faceLocations)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	GLuint SkyboxIndices[] = 
+	const GLuint SkyboxIndices[] = 
 	{
 		// front
 		0, 1, 2,
@@ -63,7 +66,7 @@ Skybox::Skybox(std::vector<std::string> faceLocations)
 		3, 6, 7
 	};
 
-	GLfloat SkyboxVertices[] = 
+	constexpr GLfloat SkyboxVertices[] = 
 	{
 		-1.0f, 1.0f, -1.0f,		0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
 		-1.0f, -1.0f, -1.0f,	0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
@@ -80,7 +83,7 @@ Skybox::Skybox(std::vector<std::string> faceLocations)
 	SkyMesh->CreateMesh(SkyboxVertices, SkyboxIndices, 64, 36);
 }
 
-void Skybox::DrawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
+void Skybox::DrawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) const
 {
 	viewMatrix = { glm::mat4(glm::mat3(viewMatrix)) };
 

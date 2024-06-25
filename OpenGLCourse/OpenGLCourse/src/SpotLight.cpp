@@ -4,7 +4,7 @@
 
 #include "SpotLight.h"
 
-SpotLight::SpotLight() : PointLight()
+SpotLight::SpotLight()
 {
 	Direction = { glm::vec3(0.0f, -1.0f, 0.0f) };
 	Edge = { };
@@ -27,10 +27,10 @@ SpotLight::SpotLight(GLuint shadowWidth, GLuint shadowHeight,
 	ProcEdge = { cosf(glm::radians(Edge)) };
 }
 
-void SpotLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation, 
-	GLuint diffuseIntensityLocation, GLuint positionLocation, GLuint directionLocation, 
-	GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation, 
-	GLuint edgeLocation)
+void SpotLight::UseLight(const GLuint ambientIntensityLocation, const GLuint ambientColourLocation,
+                         const GLuint diffuseIntensityLocation, const GLuint positionLocation, const GLuint directionLocation,
+                         const GLuint constantLocation, const GLuint linearLocation, const GLuint exponentLocation,
+                         const GLuint edgeLocation) const
 {
 	glUniform3f(ambientColourLocation, Colour.x, Colour.y, Colour.z);
 

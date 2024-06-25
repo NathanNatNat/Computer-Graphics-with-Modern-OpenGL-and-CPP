@@ -3,8 +3,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #pragma once
-#include <GL\glew.h>
-#include "CommonValues.h"
+#include <GL/glew.h>
 
 class Texture
 {
@@ -15,7 +14,7 @@ public:
 	bool LoadTexture();
 	bool LoadTextureA();
 
-	void UseTexture();
+	void UseTexture() const;
 	void ClearTexture();
 
 	~Texture();

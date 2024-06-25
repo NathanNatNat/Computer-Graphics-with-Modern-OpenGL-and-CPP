@@ -1,7 +1,3 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-
 #include "Shader.h"
 #include <iostream>
 
@@ -21,8 +17,8 @@ void Shader::CreateFromString(const char* vertexCode, const char* fragmentCode)
 
 void Shader::CreateFromFiles(const char* vertexLocation, const char* fragmentLocation)
 {
-	std::string VertexString = { ReadFile(vertexLocation) };
-	std::string FragmentString = { ReadFile(fragmentLocation) };
+	const std::string VertexString = { ReadFile(vertexLocation) };
+	const std::string FragmentString = { ReadFile(fragmentLocation) };
 	const char* VertexCode = { VertexString.c_str() };
 	const char* FragmentCode = { FragmentString.c_str() };
 
@@ -31,9 +27,9 @@ void Shader::CreateFromFiles(const char* vertexLocation, const char* fragmentLoc
 
 void Shader::CreateFromFiles(const char* vertexLocation, const char* geometryLocation, const char* fragmentLocation)
 {
-	std::string VertexString = { ReadFile(vertexLocation) };
-	std::string GeometryString = { ReadFile(geometryLocation) };
-	std::string FragmentString = { ReadFile(fragmentLocation) };
+	const std::string VertexString = { ReadFile(vertexLocation) };
+	const std::string GeometryString = { ReadFile(geometryLocation) };
+	const std::string FragmentString = { ReadFile(fragmentLocation) };
 	const char* VertexCode = { VertexString.c_str() };
 	const char* GeometryCode = { GeometryString.c_str() };
 	const char* FragmentCode = { FragmentString.c_str() };
@@ -96,7 +92,7 @@ void Shader::CompileShader(const char* vertexCode, const char* geometryCode, con
 	CompileProgram();
 }
 
-void Shader::Validate()
+void Shader::Validate() const
 {
 	GLint Result{ };
 	
@@ -105,7 +101,7 @@ void Shader::Validate()
 	if (!Result)
 	{
 		GLchar eLog[1024]{ };
-		glGetProgramInfoLog(ShaderID, sizeof(eLog), NULL, eLog);
+		glGetProgramInfoLog(ShaderID, sizeof(eLog), nullptr, eLog);
 		printf("Error validating program: '%s'\n", eLog);
 		return;
 	}
@@ -120,7 +116,7 @@ void Shader::CompileProgram() {
 	if (!Result)
 	{
 		GLchar eLog[1024]{ };
-		glGetProgramInfoLog(ShaderID, sizeof(eLog), NULL, eLog);
+		glGetProgramInfoLog(ShaderID, sizeof(eLog), nullptr, eLog);
 		printf("Error linking program: '%s'\n", eLog);
 		return;
 	}
@@ -140,7 +136,7 @@ void Shader::CompileProgram() {
 
 	for (int i = 0; i < MAX_POINT_LIGHTS; i++)
 	{
-		char LocBuff[100] = { '\0' };
+		char LocBuff[100] = {};
 
 		snprintf(LocBuff, sizeof(LocBuff), "pointLights[%d].base.colour", i);
 		UniformPointLight[i].UniformColour = glGetUniformLocation(ShaderID, LocBuff);
@@ -168,7 +164,7 @@ void Shader::CompileProgram() {
 
 	for (int i = 0; i < MAX_SPOT_LIGHTS; i++)
 	{
-		char LocBuff[100] = { '\0' };
+		char LocBuff[100] = {};
 
 		snprintf(LocBuff, sizeof(LocBuff), "spotLights[%d].base.base.colour", i);
 		UniformSpotLight[i].UniformColour = glGetUniformLocation(ShaderID, LocBuff);
@@ -207,7 +203,7 @@ void Shader::CompileProgram() {
 
 	for (int i = 0; i < 6; i++)
 	{
-		char LocBuff[100] = { '\0' };
+		char LocBuff[100] = {};
 
 		snprintf(LocBuff, sizeof(LocBuff), "lightMatrices[%d]", i);
 		UniformLightMatrices[i] = glGetUniformLocation(ShaderID, LocBuff);
@@ -215,7 +211,7 @@ void Shader::CompileProgram() {
 
 	for (int i = 0; i < MAX_POINT_LIGHTS + MAX_SPOT_LIGHTS; i++)
 	{
-		char LocBuff[100] = { '\0' };
+		char LocBuff[100] = {};
 
 		snprintf(LocBuff, sizeof(LocBuff), "omniShadowMaps[%d].shadowMap", i);
 		UniformOmniShadowMap[i].shadowMap = glGetUniformLocation(ShaderID, LocBuff);
@@ -225,73 +221,73 @@ void Shader::CompileProgram() {
 	}
 }
 
-GLuint Shader::GetProjectionLocation()
+GLuint Shader::GetProjectionLocation() const
 {
 	return UniformProjection;
 }
 
-GLuint Shader::GetModelLocation()
+GLuint Shader::GetModelLocation() const
 {
 	return UniformModel;
 }
 
-GLuint Shader::GetViewLocation()
+GLuint Shader::GetViewLocation() const
 {
 	return UniformView;
 }
 
-GLuint Shader::GetAmbientColourLocation()
+GLuint Shader::GetAmbientColourLocation() const
 {
 	return UniformDirectionalLight.UniformColour;
 }
 
-GLuint Shader::GetAmbientIntensityLocation()
+GLuint Shader::GetAmbientIntensityLocation() const
 {
 	return UniformDirectionalLight.UniformAmbientIntensity;
 }
 
-GLuint Shader::GetDiffuseIntensityLocation()
+GLuint Shader::GetDiffuseIntensityLocation() const
 {
 	return UniformDirectionalLight.UniformDiffuseIntensity;
 }
 
-GLuint Shader::GetDirectionLocation()
+GLuint Shader::GetDirectionLocation() const
 {
 	return UniformDirectionalLight.UniformDirection;
 }
 
-GLuint Shader::GetSpecularIntensityLocation()
+GLuint Shader::GetSpecularIntensityLocation() const
 {
 	return UniformSpecularIntensity;
 }
 
-GLuint Shader::GetShininessLocation()
+GLuint Shader::GetShininessLocation() const
 {
 	return UniformShininess;
 }
 
-GLuint Shader::GetEyePositionLocation()
+GLuint Shader::GetEyePositionLocation() const
 {
 	return UniformEyePosition;
 }
 
-GLuint Shader::GetOmniLightPosLocation()
+GLuint Shader::GetOmniLightPosLocation() const
 {
 	return UniformOmniLightPos;
 }
 
-GLuint Shader::GetFarPlaneLocation()
+GLuint Shader::GetFarPlaneLocation() const
 {
 	return UniformFarPlane;
 }
 
-void Shader::SetDirectionalLight(DirectionalLight * dLight)
+void Shader::SetDirectionalLight(const DirectionalLight * dLight) const
 {
 	dLight->UseLight(UniformDirectionalLight.UniformAmbientIntensity, UniformDirectionalLight.UniformColour,
 		UniformDirectionalLight.UniformDiffuseIntensity, UniformDirectionalLight.UniformDirection);
 }
 
-void Shader::SetPointLights(PointLight * pLight, int lightCount, unsigned int textureUnit, unsigned int offset)
+void Shader::SetPointLights(const PointLight * pLight, int lightCount, const unsigned int textureUnit, const unsigned int offset) const
 {
 	if (lightCount > MAX_POINT_LIGHTS) 
 		lightCount = { MAX_POINT_LIGHTS };
@@ -310,7 +306,7 @@ void Shader::SetPointLights(PointLight * pLight, int lightCount, unsigned int te
 	}
 }
 
-void Shader::SetSpotLights(SpotLight * sLight, GLint lightCount, unsigned int textureUnit, unsigned int offset)
+void Shader::SetSpotLights(const SpotLight * sLight, GLint lightCount, const unsigned int textureUnit, const unsigned int offset) const
 {
 	if (lightCount > MAX_SPOT_LIGHTS) 
 		lightCount = { MAX_SPOT_LIGHTS };
@@ -330,22 +326,22 @@ void Shader::SetSpotLights(SpotLight * sLight, GLint lightCount, unsigned int te
 	}
 }
 
-void Shader::SetTexture(GLuint textureUnit)
+void Shader::SetTexture(const GLuint textureUnit) const
 {
 	glUniform1i(UniformTexture, textureUnit);
 }
 
-void Shader::SetDirectionalShadowMap(GLuint textureUnit)
+void Shader::SetDirectionalShadowMap(const GLuint textureUnit) const
 {
 	glUniform1i(UniformDirectionalShadowMap, textureUnit);
 }
 
-void Shader::SetDirectionalLightTransform(glm::mat4 lTransform)
+void Shader::SetDirectionalLightTransform(glm::mat4 lTransform) const
 {
 	glUniformMatrix4fv(UniformDirectionalLightTransform, 1, GL_FALSE, glm::value_ptr(lTransform));
 }
 
-void Shader::SetLightMatrices(std::vector<glm::mat4> lightMatrices)
+void Shader::SetLightMatrices(std::vector<glm::mat4> lightMatrices) const
 {
 	for (size_t i = 0; i < 6; i++)
 	{
@@ -353,7 +349,7 @@ void Shader::SetLightMatrices(std::vector<glm::mat4> lightMatrices)
 	}
 }
 
-void Shader::UseShader()
+void Shader::UseShader() const
 {
 	glUseProgram(ShaderID);
 }
@@ -370,14 +366,14 @@ void Shader::ClearShader()
 	UniformProjection = { };
 }
 
-void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
+void Shader::AddShader(const GLuint theProgram, const char* shaderCode, GLenum shaderType)
 {
-	GLuint TheShader = { glCreateShader(shaderType) };
+	const GLuint TheShader = { glCreateShader(shaderType) };
 
 	const GLchar* TheCode[1]{ };
 	TheCode[0] = { shaderCode };
 
-	glShaderSource(TheShader, 1, TheCode, NULL);
+	glShaderSource(TheShader, 1, TheCode, nullptr);
 	glCompileShader(TheShader);
 
 	GLint Result = { };
@@ -386,8 +382,8 @@ void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderT
 	if (!Result)
 	{
 		GLchar eLog[1024] = { };
-		glGetShaderInfoLog(TheShader, sizeof(eLog), NULL, eLog);
-		std::cout << "Error compiling the %d shader: '%s'\n", shaderType, eLog;
+		glGetShaderInfoLog(TheShader, sizeof(eLog), nullptr, eLog);
+		std::cout << "Error compiling the " << shaderType << " shader: " << eLog;
 		return;
 	}
 

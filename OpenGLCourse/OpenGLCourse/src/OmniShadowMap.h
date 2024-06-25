@@ -1,20 +1,16 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-
 #pragma once
 #include "ShadowMap.h"
 
-class OmniShadowMap : public ShadowMap
+class OmniShadowMap final : public ShadowMap
 {
 public:
 	OmniShadowMap();
 
-	bool Init(GLuint width, GLuint height);
+	bool Init(GLuint width, GLuint height) override;
 
-	void Write();
+	void Write() override;
 
-	void Read(GLenum TextureUnit);
+	void Read(GLenum TextureUnit) override;
 
-	~OmniShadowMap();
+	~OmniShadowMap() override;
 };
